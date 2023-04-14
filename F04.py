@@ -36,7 +36,7 @@ candi = [[1,'jinb1',1,1,1],[2,'jinb2',1,2,1],
 
 def validasi(user : list, username : str):
     i = 0
-    while i < 100 and user[i] != [0 for i in range(3)]:
+    while i < 105 and user[i] != [0 for i in range(3)]:
         if user[i][0] == username:
             return i
         i += 1
