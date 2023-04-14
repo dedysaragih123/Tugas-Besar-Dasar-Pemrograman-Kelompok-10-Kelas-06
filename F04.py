@@ -43,16 +43,17 @@ def validasi(user : list, username : str):
     return -1
 
 def hilangkan_jin():
+    print("Masukkan username jin : ",end="")
     username = input()
     idx = validasi(user,username)
     if idx == -1:
-        print("Tidak ada jin dengan username tersebut.")
+        print("\nTidak ada jin dengan username tersebut.")
 
     else:
-        print('Apakah anda yakin ingin menghapus jin dengan username Jin1 (Y/N)?')
+        print('Apakah anda yakin ingin menghapus jin dengan username Jin1 (Y/N)? ',end="")
         jawab_hilang = input()
         if jawab_hilang == "Y":
-            for i in range(100):
+            for i in range(27): #for i in range(Nefektif)
                 if candi[i][1] == username:
                     candi[i][1] = 0
                     candi[i][2] = 0
@@ -69,6 +70,11 @@ def hilangkan_jin():
                 i += 1
                 Neff += 1
             user[Neff-1] = [0 for _ in range(3)]
-            print("Jin telah berhasil dihapus dari alam gaib.")
+            print("\nJin telah berhasil dihapus dari alam gaib.")
+        elif jawab_hilang == "N": 
+            quit()
+        else:
+            print("Tidak ada opsi. Ulangi!")
+            hilangkan_jin()
 
 hilangkan_jin()
