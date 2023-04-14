@@ -36,6 +36,5 @@ def load(path: str) -> list[list[str],int,int]:
             i += 1
         else:
             first_row = False
-    print(data)
     file.close()
     return [data,n_baris,n_kolom]
