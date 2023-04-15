@@ -43,3 +43,15 @@ def string_slice(string: str, index_awal: int, index_akhir: int) -> str:
     for i in range(index_awal, index_akhir):
         hasil += string[i]
     return hasil
+
+
+# Fungsi append(data,elemen):
+# Spesifikasi : Menambahkan suatu elemen ke dalam array, Asumsi tipe array dan elemen pasti sama
+def append(data,elemen):
+    isi_data = data[0]
+    n_baris = data[1]
+    hasil = [0 for _ in range(n_baris+1)]
+    for i in range(n_baris):
+        hasil[i] = isi_data[i]
+    hasil[n_baris] = elemen   
+    return hasil
