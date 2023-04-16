@@ -67,8 +67,6 @@ def run(command:str, users: list[list[list[str]],int,int], candi: list[list[list
             print(f"command \"{command}\" tidak dikenal.")
 
 
-
-
 # F01 - Login 
 def login(users: list[list[list[str]],int,int]) -> list[str]: 
     data = users[0]
@@ -97,6 +95,14 @@ def login(users: list[list[list[str]],int,int]) -> list[str]:
 def logout() -> list[str]:
     return ["" for _ in range(3)]
 
+# F03 - Summon Jin
+def summonjin():
+    pass
+
+# F04 - Hilangkan Jin
+def hapusjin():
+    pass
+
 # F05 - Ubah Tipe Jin
 def ubahjin(users: list[list[list[str]],int,int]) -> None:
     data = users[0]
@@ -121,6 +127,20 @@ def ubahjin(users: list[list[list[str]],int,int]) -> None:
     else:
         print("\nTidak ada jin dengan username tersebut.")
     users[0] = data
+
+# F06 - Jin Pembangun
+def bangun():
+    pass
+
+# F07 - Jin Pengumpul
+def kumpul():
+    pass
+
+# F08 - Batch Kumpul/Bangun
+def batchkumpul():
+    pass
+def batchbangun():
+    pass
 
 # F09 - Laporan Jin
 def laporanjin(users: list[list[list[str]],int,int], candi: list[list[list[str]],int,int], bahan_bangunan: list[list[list[str]],int,int]) -> None:
@@ -149,8 +169,14 @@ def laporanjin(users: list[list[list[str]],int,int], candi: list[list[list[str]]
     print(f"> Jumlah Batu : {data_bahan_bangunan[1][2]} unit")
     print(f"> Jumlah Air : {data_bahan_bangunan[2][2]} unit")
 
+# F10 - Ambil Laporan Candi
+
+# F11 - Hancurkan Candi
+
+# F12 - Ayam Berkokok
+
 # F13 - Load (Gunakan argparse)
-def load():
+def load() -> None:
     import argparse
     parser = argparse.ArgumentParser(add_help=False,usage='%(prog)s <nama_folder>')
     parser.add_argument("nama_folder",nargs="?",type=str,default="")
@@ -166,5 +192,9 @@ def load():
     else:
         print(f"Folder \"{args.nama_folder}\" tidak ditemukan.")
         exit()
+
+# F14
+
+# F15
 
 
