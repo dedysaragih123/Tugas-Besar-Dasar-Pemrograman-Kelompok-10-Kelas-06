@@ -4,24 +4,25 @@
 3 7 11 15 19 - Cinta
 4 8 12 16 20 - Dedy
 """
-import data
-from tools import string_strip, cari_index_username, remove_data
+
+from tools import string_strip, cari_index_username, data_remove
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["" for _ in range(3)]
 # current_login : array [0..2] of string = ["", "", ""]
 
+from data import users, candi, bahan_bangunan
 # type Data : < isi_data : matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
 
 # Prosedur run(command, users, candi, bahan_bangunan):
 # Membaca masukkan dari user dan melakukan command tersebut
-def run(command:str, users: list[list[list[str]],int,int], candi: list[list[list[str]],int,int], bahan_bangunan: list[list[list[str]],int,int]) -> None:
+def run(command:str) -> None:
     command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
     if(command == "login"):
-        current_login = login(users)
+        login()
     elif(command == "logout"):
         logout()
     elif(current_login == ["" for _ in range(3)]):
@@ -67,11 +68,10 @@ def run(command:str, users: list[list[list[str]],int,int], candi: list[list[list
         else:
             print(f"command \"{command}\" tidak dikenal.")
 
-
 # F01 - Login 
 # Fungsi login(users)
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
-def login(users: list[list[list[str]],int,int]) -> list[str]: 
+def login() -> list[str]: 
     # KAMUS LOKAL
         # index : int
         # username, password : str
@@ -84,7 +84,7 @@ def login(users: list[list[list[str]],int,int]) -> list[str]:
         print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan “logout” sebelum melakukan login kembali.")
         return ["" for _ in range(3)]
     # unpack data users
-    data = users[0]
+    isi_users = users.isi
     # Input data login (sudah dibersihkan dari spasi awal dan akhir)
     username = input("Username: ")
     password = input("Password: ")
@@ -92,10 +92,10 @@ def login(users: list[list[list[str]],int,int]) -> list[str]:
     index = cari_index_username(users,username)
     if(index != -1): # username ditemukan 
         # cek apakah password sesuai atau tidak
-        if(password == data[index][1]):
+        if(password == isi_users[index][1]):
             print(f"Selamat datang, {username}!")
             print("Masukkan command \"help\" untuk daftar command yang dapat kamu panggil")
-            return data[index]
+            return isi_users[index]
         else: # password salah
             print("Password salah!")
             return ["" for _ in range(3)]
@@ -137,8 +137,8 @@ def hapusjin(users: list[list[list[str]],int,int], candi: list[list[list[str]],i
     # input username
     username = input("Masukkan username jin : ")
     # cek username, jika tidak ditemukan maka bernilai -1
-    idx = cari_index_username(users,username)
-    if(idx == -1):
+    index = cari_index_username(users,username)
+    if(index == -1):
         print("Tidak ada jin dengan username tersebut.")
     else:
         jawab_hapus = input("Apakah anda yakin ingin menghapus jin dengan username Jin1 (Y/N)? ")
@@ -151,7 +151,7 @@ def hapusjin(users: list[list[list[str]],int,int], candi: list[list[list[str]],i
                     data_candi[i][2] = ""
                     data_candi[i][3] = ""
             # hapus data jin tersebut
-            data_users = remove_data(users,)
+            data_users = data_remove(users,index)
             
             print("\nJin telah berhasil dihapus dari alam gaib.")
             print(users)
