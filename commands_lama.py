@@ -247,7 +247,9 @@ def laporanjin(users,bahan_bangunan,current_login):
         print(f"> Total Jin: {total_jin}")
         print(f"> Total Jin Pengumpul: {total_pengumpul}")
         print(f"> Total Jin Pembangun: {total_pembangun}")
+
         
+
         print(f"> Jumlah Pasir : {bahan_bangunan[0][2]} unit")
         print(f"> Jumlah Batu : {bahan_bangunan[1][2]} unit")
         print(f"> Jumlah Air : {bahan_bangunan[2][2]} unit")
@@ -295,6 +297,7 @@ def save():
     if(file_baru):
         print()
     print(f"Berhasil menyimpan data di folder {path}!")
+    data.save()
 
 
 # F15 - Help
