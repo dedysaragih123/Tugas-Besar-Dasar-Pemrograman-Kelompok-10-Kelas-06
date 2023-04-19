@@ -4,22 +4,28 @@
 3 7 11 15 19 - Cinta
 4 8 12 16 20 - Dedy
 """
+import data
+from tools import string_strip, cari_index_username, remove_data
 
-from tools import append
-
-# untuk menyimpan data login
+# untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["" for _ in range(3)]
+# current_login : array [0..2] of string = ["", "", ""]
 
+# type Data : < isi_data : matriks of string,
+#               n_baris : int,
+#               n_kolom : int >
+
+# Prosedur run(command, users, candi, bahan_bangunan):
+# Membaca masukkan dari user dan melakukan command tersebut
 def run(command:str, users: list[list[list[str]],int,int], candi: list[list[list[str]],int,int], bahan_bangunan: list[list[list[str]],int,int]) -> None:
-    command = command.strip() # PERLU BIKIN SENDIRI strip()
+    command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
-    if(current_login == ["" for _ in range(3)]):
-        if(command == "login"):
-            current_login = (login(users))
-        elif(command == "logout"):
-            print("Logout gagal!")
-            print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
-        elif(command == "help"):
+    if(command == "login"):
+        current_login = login(users)
+    elif(command == "logout"):
+        logout()
+    elif(current_login == ["" for _ in range(3)]):
+        if(command == "help"):
             pass
         elif(command == "exit"):
             pass
@@ -29,12 +35,7 @@ def run(command:str, users: list[list[list[str]],int,int], candi: list[list[list
         else:
             print(f"command \"{command}\" tidak dikenal.")
     else:
-        if(command == "login"):
-            print("Login gagal!")
-            print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan “logout” sebelum melakukan login kembali.")
-        elif(command == "logout"):
-            current_login = logout()
-        elif(command == "summonjin"):
+        if(command == "summonjin"):
             pass
         elif(command == "hapusjin"):
             pass
@@ -68,23 +69,34 @@ def run(command:str, users: list[list[list[str]],int,int], candi: list[list[list
 
 
 # F01 - Login 
+# Fungsi login(users)
+# Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
 def login(users: list[list[list[str]],int,int]) -> list[str]: 
+    # KAMUS LOKAL
+        # index : int
+        # username, password : str
+        # current_login : array [0..2] of string
+        # data : matrix of string
+    # ALGORITMA
+    # Cek apakah sudah login atau belum
+    if(current_login != ["" for _ in range(3)]):
+        print("Login gagal!")
+        print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan “logout” sebelum melakukan login kembali.")
+        return ["" for _ in range(3)]
+    # unpack data users
     data = users[0]
-    n_baris = users[1]
+    # Input data login (sudah dibersihkan dari spasi awal dan akhir)
     username = input("Username: ")
     password = input("Password: ")
-    cekUsername = False
-    for i in range(n_baris):
-        if(username == data[i][0]):
-            cekUsername = True
-            index = i
-            break
-    if(cekUsername):
+    # mencari index username, jika tidak ditemukan maka bernilai -1
+    index = cari_index_username(users,username)
+    if(index != -1): # username ditemukan 
+        # cek apakah password sesuai atau tidak
         if(password == data[index][1]):
             print(f"Selamat datang, {username}!")
             print("Masukkan command \"help\" untuk daftar command yang dapat kamu panggil")
-            return data[i]
-        else:
+            return data[index]
+        else: # password salah
             print("Password salah!")
             return ["" for _ in range(3)]
     else:
@@ -92,39 +104,101 @@ def login(users: list[list[list[str]],int,int]) -> list[str]:
         return ["" for _ in range(3)]
 
 # F02 - Logout 
-def logout() -> list[str]:
-    return ["" for _ in range(3)]
+# Fungsi logout()
+# Melakukan logout akun dengan cara mengosongkan data current_login
+def logout():
+    # KAMUS LOKAL
+        # current_login : array [0..2] of string
+    # ALGORITMA
+    if(current_login == ["" for _ in range(3)]):
+        print("Logout gagal!")
+        print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
+    else:
+        current_login = ["" for _ in range(3)]
+        print("Logout berhasil! ")
 
 # F03 - Summon Jin
+# Fungsi summonjin()
+# Mensummon / membuat jin baru
 def summonjin():
     pass
 
 # F04 - Hilangkan Jin
-def hapusjin():
-    pass
+# Fungsi hapusjin()
+# Menghapus jin serta candi yang dibuatnya
+def hapusjin(users: list[list[list[str]],int,int], candi: list[list[list[str]],int,int]):
+    # unpack data
+    data_users = users[0]
+    data_candi = candi[0]
+    n_baris_users = users[1]
+    n_baris_candi = candi[1]
+    n_kolom_users = users[2]
+    n_kolom_candi = candi[2]
+    # input username
+    username = input("Masukkan username jin : ")
+    # cek username, jika tidak ditemukan maka bernilai -1
+    idx = cari_index_username(users,username)
+    if(idx == -1):
+        print("Tidak ada jin dengan username tersebut.")
+    else:
+        jawab_hapus = input("Apakah anda yakin ingin menghapus jin dengan username Jin1 (Y/N)? ")
+        if(jawab_hapus == "Y"): # jin dihapuskan
+            print(users)
+            # menghapuskan candi yang dibuat oleh jin tersebut
+            for i in range(n_baris_candi):
+                if data_candi[i][1] == username:
+                    data_candi[i][1] = ""
+                    data_candi[i][2] = ""
+                    data_candi[i][3] = ""
+            # hapus data jin tersebut
+            data_users = remove_data(users,)
+            
+            print("\nJin telah berhasil dihapus dari alam gaib.")
+            print(users)
+        elif(jawab_hapus == "N"): 
+            quit()
+        else: # bukan Y/N 
+            print("Tidak ada opsi. Ulangi!")
+            hapusjin(users,candi)
 
 # F05 - Ubah Tipe Jin
+# Prosedur ubahjin(users)
+# Mengubah role dari jin, jika role pembangun maka dapat diubah ke pengumpul dan sebaliknya
 def ubahjin(users: list[list[list[str]],int,int]) -> None:
+    # KAMUS LOKAL
+        # data : matrix of string
+        # n_baris, i, index : int
+        # username, ubah: str
+        # ditemukan : bool
+    # ALGORITMA
+    # unpack data users
     data = users[0]
     n_baris = users[1]
+    # input user
     username = input("Masukkan username jin: ")
     ditemukan = False
+    # Cari username
     for i in range(n_baris):
         if(username == data[i][0]):
             ditemukan = True
             index = i
             break
-    if(ditemukan):
-        if(data[index][2]=="jin_pengumpul"):
+    if(ditemukan): # username ditemukan
+        if(data[index][2]=="jin_pengumpul"): # role pengumpul menjadi pembangun
             ubah = input("Jin ini bertipe \"Pengumpul\". Yakin ingin mengubah ke tipe \"Pembangun\" (Y/N)? ")
             if(ubah == "Y"):
                 data[index][2] = "jin_pembangun"
-        else:
+                print("Jin telah berhasil diubah.")
+            else:
+                print("Jin tidak diubah.")
+        else: # role pembangun menjadi pengumpul
             ubah = input("Jin ini bertipe \"Pembangun\". Yakin ingin mengubah ke tipe \"Pengumpul\" (Y/N)? ")
             if(ubah == "Y"):
                 data[index][2] = "jin_pengumpul"
-        print("Jin telah berhasil diubah.")
-    else:
+                print("Jin telah berhasil diubah.")
+            else:
+                print("Jin tidak diubah.")
+    else: # username tidak ditemukan
         print("\nTidak ada jin dengan username tersebut.")
     users[0] = data
 
@@ -176,8 +250,14 @@ def laporanjin(users: list[list[list[str]],int,int], candi: list[list[list[str]]
 # F12 - Ayam Berkokok
 
 # F13 - Load (Gunakan argparse)
+# Prosedur load()
+# Menggunakan argparse agar dapat meload / membuka kembali data yang sudah disave sebelumnya, 
+# prosedur ini sendiri dijalankan hanya sekali saja pada command line / terminal
 def load() -> None:
     import argparse
+    # KAMUS LOKAL 
+        # parser, args : objek dari library argparse
+        # nama_folder : str
     parser = argparse.ArgumentParser(add_help=False,usage='%(prog)s <nama_folder>')
     parser.add_argument("nama_folder",nargs="?",type=str,default="")
     args = parser.parse_args() 
@@ -194,7 +274,22 @@ def load() -> None:
         exit()
 
 # F14
+def save():
+    pass
 
 # F15
+
+
+#F16
+def exit():
+    print("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ",end='')
+    jawab_exit = input()
+    if jawab_exit == 'y'or jawab_exit == 'Y':
+        save() 
+        quit()
+    elif jawab_exit == 'n' or jawab_exit == 'N':
+        quit()
+    else: 
+        exit()
 
 

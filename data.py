@@ -1,18 +1,14 @@
-from tools import split, string_slice
-# BERISI FUNGSI UNTUK AKSES FILE
-# type Data : < isi_data : matriks of string,
-#               n_baris : int,
-#               n_kolom : int >
+from tools import string_split, string_slice
 
 # Fungsi load(path)
 # Membaca data csv di lokasi "path" dan mengembalikan data dalam format [isi_data, n_baris, n_kolom] 
 def load(path: str) -> list[list[str],int,int]:
     # KAMUS LOKAL
-        # file : file
         # n_baris, n_kolom, i : int
-        # cek_kolom, first_row : bool
         # line : str
-        # data : Data
+        # cek_kolom, first_row : bool
+        # file : file
+        # data : matriks of string
     # ALGORITMA
     # Mencari jumlah efektif data
     file = open(path, "r").readlines()
@@ -35,11 +31,11 @@ def load(path: str) -> list[list[str],int,int]:
     first_row = True
     for line in file:
         if(first_row == False): # agar judul csv tidak masuk data contoh (username;password;role)
-            # line dilakukan slicing agar new line hilang (\n) # kecuali baris terkahir
+            # line dilakukan slicing agar new line hilang (\n) kecuali pada baris terkahir
             if(i != n_baris-1):
-                data[i] = split(string_slice(line,0,len(line)-1),";")
+                data[i] = string_split(string_slice(line,0,len(line)-1),";")
             else:
-                data[i] = split(line,";")
+                data[i] = string_split(line,";")
             i += 1
         else:
             first_row = False
@@ -50,10 +46,10 @@ def load(path: str) -> list[list[str],int,int]:
 # Membaca data csv di lokasi "path" dan mengembalikan [data, jumlah_baris, jumlah_kolom], data dalam bentuk matriks 
 def save(path: str, nama_file: str, data: list[list[str],int,int]) -> None:
     # KAMUS LOKAL
-        # file : file
-        # isi_data : matriks of string
         # n_baris, n_kolom, i, j : int
         # line : str
+        # file : file
+        # isi_data : matriks of string
     # ALGORITMA
     file = open(path,"w+")
     isi_data = data[0]
