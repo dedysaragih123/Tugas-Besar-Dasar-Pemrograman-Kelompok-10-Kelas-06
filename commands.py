@@ -8,7 +8,7 @@
 from tools import string_strip, cari_index_username, data_remove
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
-current_login = ["" for _ in range(3)]
+current_login = ["", "", ""]
 # current_login : array [0..2] of string = ["", "", ""]
 
 from data import users, candi, bahan_bangunan
@@ -18,13 +18,13 @@ from data import users, candi, bahan_bangunan
 
 # Prosedur run(command, users, candi, bahan_bangunan):
 # Membaca masukkan dari user dan melakukan command tersebut
-def run(command:str) -> None:
+def run(command: str) -> None:
     command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
     if(command == "login"):
-        login()
+        current_login = login(current_login)
     elif(command == "logout"):
-        logout()
+        current_login = logout(current_login)
     elif(current_login == ["" for _ in range(3)]):
         if(command == "help"):
             pass
@@ -71,18 +71,18 @@ def run(command:str) -> None:
 # F01 - Login 
 # Fungsi login(users)
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
-def login() -> list[str]: 
+def login(current_login) -> list[str]: 
     # KAMUS LOKAL
         # index : int
         # username, password : str
         # current_login : array [0..2] of string
-        # data : matrix of string
+            # data : matrix of string
     # ALGORITMA
     # Cek apakah sudah login atau belum
     if(current_login != ["" for _ in range(3)]):
         print("Login gagal!")
         print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan “logout” sebelum melakukan login kembali.")
-        return ["" for _ in range(3)]
+        return current_login
     # unpack data users
     isi_users = users.isi
     # Input data login (sudah dibersihkan dari spasi awal dan akhir)
@@ -106,16 +106,18 @@ def login() -> list[str]:
 # F02 - Logout 
 # Fungsi logout()
 # Melakukan logout akun dengan cara mengosongkan data current_login
-def logout():
+def logout(current_login) -> list[str]:
     # KAMUS LOKAL
         # current_login : array [0..2] of string
     # ALGORITMA
     if(current_login == ["" for _ in range(3)]):
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
+        return current_login
     else:
         current_login = ["" for _ in range(3)]
         print("Logout berhasil! ")
+        return ["", "", ""]
 
 # F03 - Summon Jin
 # Fungsi summonjin()
