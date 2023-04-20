@@ -5,13 +5,13 @@
 4 8 12 16 20 - Dedy
 """
 
-from tools import string_strip, cari_index_username, data_remove
+from tools import string_strip, cari_index_username, data_remove, data_append
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["", "", ""]
 # current_login : array [0..2] of string = ["", "", ""]
 
-from data import users, candi, bahan_bangunan
+from data import Data, users, candi, bahan_bangunan
 # type Data : < isi_data : matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
@@ -37,11 +37,20 @@ def run(command: str) -> None:
             print(f"command \"{command}\" tidak dikenal.")
     else:
         if(command == "summonjin"):
-            pass
+            if(current_login[2] == "bandung_bondowoso"):
+                summonjin(users)
+            else:
+                print("summonjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "hapusjin"):
-            pass
+            if(current_login[2] == "bandung_bondowoso"):
+                hapusjin(users,candi)
+            else:
+                print("hapusjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "ubahjin"):
-            ubahjin(users)
+            if(current_login[2] == "bandung_bondowoso"):
+                ubahjin()
+            else:
+                print("Ubahjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "bangun"):
             pass
         elif(command == "kumpul"):
@@ -67,16 +76,18 @@ def run(command: str) -> None:
             pass
         else:
             print(f"command \"{command}\" tidak dikenal.")
+    print(candi.isi)
+    print(users.isi, users.n_baris, sep=" -> ")
 
 # F01 - Login 
 # Fungsi login(users)
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
-def login(current_login) -> list[str]: 
+def login(current_login: list[str]) -> list[str]: 
     # KAMUS LOKAL
         # index : int
         # username, password : str
         # current_login : array [0..2] of string
-            # data : matrix of string
+        # isi_users : matrix of string
     # ALGORITMA
     # Cek apakah sudah login atau belum
     if(current_login != ["" for _ in range(3)]):
@@ -106,7 +117,7 @@ def login(current_login) -> list[str]:
 # F02 - Logout 
 # Fungsi logout()
 # Melakukan logout akun dengan cara mengosongkan data current_login
-def logout(current_login) -> list[str]:
+def logout(current_login: list[str]) -> list[str]:
     # KAMUS LOKAL
         # current_login : array [0..2] of string
     # ALGORITMA
@@ -122,87 +133,136 @@ def logout(current_login) -> list[str]:
 # F03 - Summon Jin
 # Fungsi summonjin()
 # Mensummon / membuat jin baru
-def summonjin():
-    pass
+def summonjin(users: Data) -> None:
+    # KAMUS LOKAL
+        # n_baris, i : int
+        # jenis_jin, username, password, role : str
+        # username_valid : bool
+        # isi_users : matrix of string 
+    # ALGORITMA
+    #unpack data
+    isi_users = users.isi
+    n_baris = users.n_baris
+    if(users.n_baris == 102):
+        print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
+    else:
+        print("Jenis jin yang dapat dipanggil:")
+        print("  (1) Pengumpul - Bertugas mengumpulkan bahan bangunan")
+        print("  (2) Pembangun - Bertugas membangun candi")
+        # menentukan jenis jin (pengumpul atau pembangun)
+        while True:
+            jenis_jin = string_strip(input("\nMasukkan nomor jenis jin yang ingin dipanggil: "))
+            print()
+            if(jenis_jin == "1"):
+                role = "jin_pengumpul"
+                print("Memilih jin \"Pengumpul\".")
+                break
+            elif(jenis_jin == "2"):
+                role = "jin_pembangun"
+                print("Memilih jin \"Pembangun\".")
+                break
+            else:
+                print(f"Tidak ada jenis jin bernomor \"{jenis_jin}\"!")
+        # membuat username yang valid
+        while True:
+            username = input("\nMasukkan username jin: ")
+            username_valid = True
+            for i in range(n_baris):
+                if(isi_users[i][0] == username):
+                    print(f"\nUsername \"{username}\" sudah diambil!")
+                    username_valid = False
+                    break
+            if(username_valid):
+                break
+        # membuat password yang valid
+        while True:
+            password = input("Masukkan password jin: ")
+            if(5<=len(password)<=25):
+                print()
+                break
+            else:
+                print("\nPassword panjangnya harus 5-25 karakter!")
+            print()
+        # tambahkan data pada users
+        users = data_append(users,[username,password,role])
+        print("Mengumpulkan sesajen...\nMenyerahkan sesajen...\nMembacakan mantra...")
+        print(f"\nJin {username} berhasil dipanggil!")
 
 # F04 - Hilangkan Jin
 # Fungsi hapusjin()
 # Menghapus jin serta candi yang dibuatnya
-def hapusjin(users: list[list[list[str]],int,int], candi: list[list[list[str]],int,int]):
+def hapusjin(users: Data, candi: Data):
+    # KAMUS LOKAL
+        # n_baris_candi, i, index : int
+        # username, jawab : str
+        # isi_candi : matriks of string
+    # ALGORITMA
     # unpack data
-    data_users = users[0]
-    data_candi = candi[0]
-    n_baris_users = users[1]
-    n_baris_candi = candi[1]
-    n_kolom_users = users[2]
-    n_kolom_candi = candi[2]
+    isi_candi = candi.isi
+    n_baris_candi = candi.n_baris
     # input username
     username = input("Masukkan username jin : ")
-    # cek username, jika tidak ditemukan maka bernilai -1
+    # cek username, jika tidak ditemukan maka index bernilai -1 jika ditemukan maka index bernilai posisi index ditemukannya username
     index = cari_index_username(users,username)
     if(index == -1):
         print("Tidak ada jin dengan username tersebut.")
     else:
-        jawab_hapus = input("Apakah anda yakin ingin menghapus jin dengan username Jin1 (Y/N)? ")
-        if(jawab_hapus == "Y"): # jin dihapuskan
-            print(users)
+        jawab = input("Apakah anda yakin ingin menghapus jin dengan username Jin1 (Y/N)? ")
+        if(jawab == "Y"): # jin dihapuskan
             # menghapuskan candi yang dibuat oleh jin tersebut
             for i in range(n_baris_candi):
-                if data_candi[i][1] == username:
-                    data_candi[i][1] = ""
-                    data_candi[i][2] = ""
-                    data_candi[i][3] = ""
-            # hapus data jin tersebut
-            data_users = data_remove(users,index)
-            
+                if(isi_candi[i][1] == username):
+                    isi_candi[i][1] = ""
+                    isi_candi[i][2] = ""
+                    isi_candi[i][3] = ""
+                    isi_candi[i][4] = ""
+            # hapus data user jin tersebut
+            users = data_remove(users,index)
             print("\nJin telah berhasil dihapus dari alam gaib.")
-            print(users)
-        elif(jawab_hapus == "N"): 
-            quit()
-        else: # bukan Y/N 
-            print("Tidak ada opsi. Ulangi!")
-            hapusjin(users,candi)
+        elif(jawab != "N"): 
+            print(f"Tidak ada opsi \"{jawab}\". Ulangi!")
+            hapusjin(users,candi)            
 
 # F05 - Ubah Tipe Jin
 # Prosedur ubahjin(users)
 # Mengubah role dari jin, jika role pembangun maka dapat diubah ke pengumpul dan sebaliknya
-def ubahjin(users: list[list[list[str]],int,int]) -> None:
+def ubahjin() -> None:
     # KAMUS LOKAL
-        # data : matrix of string
         # n_baris, i, index : int
         # username, ubah: str
         # ditemukan : bool
+        # isi_users : matrix of string
     # ALGORITMA
     # unpack data users
-    data = users[0]
-    n_baris = users[1]
+    isi_users = users.isi
+    n_baris = users.n_baris
     # input user
     username = input("Masukkan username jin: ")
     ditemukan = False
     # Cari username
     for i in range(n_baris):
-        if(username == data[i][0]):
+        if(username == isi_users[i][0]):
             ditemukan = True
             index = i
             break
     if(ditemukan): # username ditemukan
-        if(data[index][2]=="jin_pengumpul"): # role pengumpul menjadi pembangun
+        if(isi_users[index][2]=="jin_pengumpul"): # role pengumpul menjadi pembangun
             ubah = input("Jin ini bertipe \"Pengumpul\". Yakin ingin mengubah ke tipe \"Pembangun\" (Y/N)? ")
             if(ubah == "Y"):
-                data[index][2] = "jin_pembangun"
+                isi_users[index][2] = "jin_pembangun"
                 print("Jin telah berhasil diubah.")
             else:
                 print("Jin tidak diubah.")
         else: # role pembangun menjadi pengumpul
             ubah = input("Jin ini bertipe \"Pembangun\". Yakin ingin mengubah ke tipe \"Pengumpul\" (Y/N)? ")
             if(ubah == "Y"):
-                data[index][2] = "jin_pengumpul"
+                isi_users[index][2] = "jin_pengumpul"
                 print("Jin telah berhasil diubah.")
             else:
                 print("Jin tidak diubah.")
     else: # username tidak ditemukan
         print("\nTidak ada jin dengan username tersebut.")
-    users[0] = data
+    users.isi = isi_users
 
 # F06 - Jin Pembangun
 def bangun():
@@ -219,7 +279,7 @@ def batchbangun():
     pass
 
 # F09 - Laporan Jin
-def laporanjin(users: list[list[list[str]],int,int], candi: list[list[list[str]],int,int], bahan_bangunan: list[list[list[str]],int,int]) -> None:
+def laporanjin(users: Data, candi: Data, bahan_bangunan: list[list[list[str]],int,int]) -> None:
     total_jin = 0
     total_pengumpul = 0
     total_pembangun = 0
