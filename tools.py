@@ -82,6 +82,67 @@ def string_strip(string: str) -> list[str]:
         hasil += string[i]
     return hasil
 
+# Fungsi string_in_array(array, string, array_length)
+# mengecek apakah string terdapat pada array jika iya maka mengembalikan indexnya jika tidak mditemukan mengembalikan nilai -1
+def string_in_array(array : list[str], string: str, array_length: int) -> int:
+    # KAMUS LOKAL
+        # i : int
+    # ALGORTIMA
+    for i in range(array_length):
+        if(array[i] == string):
+            return i
+    return -1
+
+# Fungsi string_leksikografis_min(array,length)
+# Menentukan string terkecil berdasarkan leksikografis
+def string_leksikografis_min(array: list[str], length: int) -> str:
+    # KAMUS LOKAL
+        # i : int
+        # min : str
+    # ALGORITMA
+    min = array[0]
+    for i in range(length):
+        if(array[i] < min):
+            min = array[i]
+    return min
+
+# Fungsi string_leksikografis_maks(array,length)
+# Menentukan string tertinggi berdasarkan leksikografis
+def string_leksikografis_maks(array: list[str], length: int) -> str:
+    # KAMUS LOKAL
+        # i : int
+        # maks : str
+    # ALGORITMA
+    maks = array[0]
+    for i in range(length):
+        if(array[i] > maks):
+            maks = array[i]
+    return maks
+    
+# Fungsi int_min(array,length)
+# Mengembalikan nilai terkecil pada array integer
+def int_min(array: list[int], length: int)-> int:
+    # KAMUS LOKAL
+        # min, i : int
+    # ALGORITMA
+    min = array[0]
+    for i in range(length):
+        if(array[i] < min):
+            min = array[i]
+    return min
+
+# Fungsi int_mals(array,length)
+# Mengembalikan nilai terbesar pada array integer
+def int_maks(array: list[int], length: int) -> int:
+    # KAMUS LOKAL
+        # maks, i : int
+    # ALGORITMA
+    maks = array[0]
+    for i in range(length):
+        if(array[i] > maks):
+            maks = array[i]
+    return maks
+
 # Fungsi data_append(data,elemen):
 # Menambahkan suatu elemen ke dalam array, Asumsi tipe array dan elemen pasti sama
 def data_append(data: Data, elemen: list[str]) -> Data:

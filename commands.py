@@ -5,7 +5,8 @@
 4 8 12 16 20 - Dedy
 """
 
-from tools import string_strip, cari_index_username, data_remove, data_append
+from tools import string_strip, string_in_array, cari_index_username, data_remove, data_append, int_min, int_maks
+from tools import string_leksikografis_min, string_leksikografis_maks
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["", "", ""]
@@ -16,9 +17,9 @@ from data import Data, users, candi, bahan_bangunan
 #               n_baris : int,
 #               n_kolom : int >
 
-# Prosedur run(command, users, candi, bahan_bangunan):
+# Prosedur run(command):
 # Membaca masukkan dari user dan melakukan command tersebut
-def run(command: str) -> None:
+def run(command: str) -> None:  
     command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
     if(command == "login"):
@@ -48,7 +49,7 @@ def run(command: str) -> None:
                 print("hapusjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "ubahjin"):
             if(current_login[2] == "bandung_bondowoso"):
-                ubahjin()
+                ubahjin(users)
             else:
                 print("Ubahjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "bangun"):
@@ -76,11 +77,10 @@ def run(command: str) -> None:
             pass
         else:
             print(f"command \"{command}\" tidak dikenal.")
-    print(candi.isi)
-    print(users.isi, users.n_baris, sep=" -> ")
+    #print(users.isi, users.n_baris, sep=" -> ")
 
 # F01 - Login 
-# Fungsi login(users)
+# Fungsi login(current_login)
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
 def login(current_login: list[str]) -> list[str]: 
     # KAMUS LOKAL
@@ -115,7 +115,7 @@ def login(current_login: list[str]) -> list[str]:
         return ["" for _ in range(3)]
 
 # F02 - Logout 
-# Fungsi logout()
+# Fungsi logout(current_login)
 # Melakukan logout akun dengan cara mengosongkan data current_login
 def logout(current_login: list[str]) -> list[str]:
     # KAMUS LOKAL
@@ -131,7 +131,7 @@ def logout(current_login: list[str]) -> list[str]:
         return ["", "", ""]
 
 # F03 - Summon Jin
-# Fungsi summonjin()
+# Prosedur summonjin(users)
 # Mensummon / membuat jin baru
 def summonjin(users: Data) -> None:
     # KAMUS LOKAL
@@ -189,9 +189,9 @@ def summonjin(users: Data) -> None:
         print(f"\nJin {username} berhasil dipanggil!")
 
 # F04 - Hilangkan Jin
-# Fungsi hapusjin()
+# Prosedur hapusjin(users,candi)
 # Menghapus jin serta candi yang dibuatnya
-def hapusjin(users: Data, candi: Data):
+def hapusjin(users: Data, candi: Data) -> None:
     # KAMUS LOKAL
         # n_baris_candi, i, index : int
         # username, jawab : str
@@ -226,27 +226,21 @@ def hapusjin(users: Data, candi: Data):
 # F05 - Ubah Tipe Jin
 # Prosedur ubahjin(users)
 # Mengubah role dari jin, jika role pembangun maka dapat diubah ke pengumpul dan sebaliknya
-def ubahjin() -> None:
+def ubahjin(users: Data) -> None:
     # KAMUS LOKAL
         # n_baris, i, index : int
         # username, ubah: str
         # ditemukan : bool
         # isi_users : matrix of string
     # ALGORITMA
-    # unpack data users
+    # unpack data 
     isi_users = users.isi
-    n_baris = users.n_baris
     # input user
     username = input("Masukkan username jin: ")
-    ditemukan = False
-    # Cari username
-    for i in range(n_baris):
-        if(username == isi_users[i][0]):
-            ditemukan = True
-            index = i
-            break
-    if(ditemukan): # username ditemukan
-        if(isi_users[index][2]=="jin_pengumpul"): # role pengumpul menjadi pembangun
+    # Cari username jika ditemukan maka mengembalikan indexnya jika tidak ditemukan maka bernilai -1
+    index = cari_index_username(users,username)
+    if(index != -1): # username ditemukan
+        if(isi_users[index][2] == "jin_pengumpul"): # role pengumpul menjadi pembangun
             ubah = input("Jin ini bertipe \"Pengumpul\". Yakin ingin mengubah ke tipe \"Pembangun\" (Y/N)? ")
             if(ubah == "Y"):
                 isi_users[index][2] = "jin_pembangun"
@@ -279,31 +273,82 @@ def batchbangun():
     pass
 
 # F09 - Laporan Jin
-def laporanjin(users: Data, candi: Data, bahan_bangunan: list[list[list[str]],int,int]) -> None:
+# Prosedur laporanjin(users,candi,bahan_bangunan)
+# Melakukan laporanjin mulai dari total jin masing-masing jenis, jin termalas dan terajin serta bahan bangunan
+def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
+    # KAMUS LOKAL
+        # n_baris_users, n_baris_candi, total_jin, total_pengumpul, total_pembangun, i, index : int
+        # n_jin, count_maks, count_min, candi_maks, candi_min, index_jin_maks, index_jin_min  : int
+        # count_candi_jin : array of integer
+        # jin_maks, jin min, jin : array of string
+        # isi_users, isi_candi, isi_bahan_bangunan : matriks of string
+    # ALGORITMA
+    # unpack data
+    isi_users = users.isi
+    isi_candi = candi.isi
+    isi_bahan_bangunan = bahan_bangunan.isi
+    n_baris_users = users.n_baris
+    n_baris_candi = candi.n_baris
+    # menentukan jumlah jin dan tipenya
     total_jin = 0
     total_pengumpul = 0
     total_pembangun = 0
-    data_users = users[0]
-    data_candi = candi[0]
-    data_bahan_bangunan = bahan_bangunan[0]
-    n_baris_users = users[1]
-    n_baris_candi = candi[1]
     for i in range(n_baris_users):
-        if(data_users[i][2] == "jin_pengumpul"):
+        if(isi_users[i][2] == "jin_pengumpul"):
             total_jin += 1
             total_pengumpul += 1
-        elif(data_users[i][2] == "jin_pembangun"):
+        elif(isi_users[i][2] == "jin_pembangun"):
             total_jin += 1
             total_pembangun += 1
     print(f"> Total Jin: {total_jin}")
     print(f"> Total Jin Pengumpul: {total_pengumpul}")
     print(f"> Total Jin Pembangun: {total_pembangun}")
-    
-    # BAGIAN RIBET INI BELUM SELESAI
-    
-    print(f"> Jumlah Pasir : {data_bahan_bangunan[0][2]} unit")
-    print(f"> Jumlah Batu : {data_bahan_bangunan[1][2]} unit")
-    print(f"> Jumlah Air : {data_bahan_bangunan[2][2]} unit")
+
+    # MENCARI JIN TERMALAS DAN TERAJIN
+    if(n_baris_candi == 0):
+        print("> Jin Terajin: -")
+        print("> Jin Termalas: -")
+    else:
+        n_jin = n_baris_users - 2 # -2 karena akun bondowoso dan Roro bukan jin
+        jin = ["" for _ in range(n_jin)]
+        for i in range(n_jin):
+            jin[i] = isi_users[i+2][0]
+        count_candi_jin = [0 for _ in range(n_jin)]
+        for i in range(n_baris_candi):
+            index = string_in_array(jin,isi_candi[i][1],n_jin)
+            if(index != -1):
+                count_candi_jin[index] += 1
+        # maksimum minimum candi yang dibuat oleh seorang jin
+        candi_maks = int_maks(count_candi_jin,n_jin)
+        candi_min = int_min(count_candi_jin, n_jin)
+        # Menghitung jumlah jin yang membangun candi dengan jumlah maksimum atau minimum
+        count_maks = 0
+        count_min = 0
+        for i in range(n_jin): 
+            if(count_candi_jin[i] == candi_maks):
+                count_maks += 1
+            if(count_candi_jin[i] == candi_min):
+                count_min += 1
+        # Mencari semua jin yang membangun candi dengan jumlah maksimum atau minimum ke dalam array of string
+        jin_maks = ["" for _ in range(count_maks)]
+        jin_min = ["" for _ in range(count_min)]
+        index_jin_maks = 0
+        index_jin_min = 0
+        for i in range(n_jin): 
+            if(count_candi_jin[i] == candi_maks):
+                jin_maks[index_jin_maks] = jin[i]
+                index_jin_maks += 1
+            if(count_candi_jin[i] == candi_min):
+                jin_min[index_jin_min] = jin[i]
+                index_jin_min += 1
+        # Mengembalikan jin termalas dan terajin berdasarkan leksikografis
+        print(f"> Jin Terajin: {string_leksikografis_min(jin_maks,count_maks)}")
+        print(f"> Jin Termalas: {string_leksikografis_maks(jin_min,count_min)}")
+
+    # Menentukan jumlah bahan bangunan    
+    print(f"> Jumlah Pasir : {isi_bahan_bangunan[0][2]} unit")
+    print(f"> Jumlah Batu : {isi_bahan_bangunan[1][2]} unit")
+    print(f"> Jumlah Air : {isi_bahan_bangunan[2][2]} unit")
 
 # F10 - Ambil Laporan Candi
 
@@ -319,7 +364,7 @@ def load() -> None:
     import argparse
     # KAMUS LOKAL 
         # parser, args : objek dari library argparse
-        # nama_folder : str
+        # args.nama_folder : str
     parser = argparse.ArgumentParser(add_help=False,usage='%(prog)s <nama_folder>')
     parser.add_argument("nama_folder",nargs="?",type=str,default="")
     args = parser.parse_args() 
