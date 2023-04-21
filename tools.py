@@ -148,7 +148,7 @@ def int_maks(array: list[int], length: int) -> int:
 def data_append(data: Data, elemen: list[str]) -> Data:
     # KAMUS LOKAL
         # n_baris, i : int
-        # isi_data, hasil : matriks of string
+        # isi_data, hasil : matrix of string
     # ALGORITMA
     # unpack data
     isi_data = data.isi
@@ -167,7 +167,7 @@ def data_append(data: Data, elemen: list[str]) -> Data:
 def data_remove(data: Data, index: int) -> Data:
     # KAMUS LOKAL
         # n_baris, n_kolom, i : int
-        # isi_data, data_baru : matriks of string
+        # isi_data, data_baru : matrix of string
     # ALGORTIMA
     # unpack data
     isi_data = data.isi
@@ -188,7 +188,7 @@ def data_remove(data: Data, index: int) -> Data:
 def cari_index_username(users: Data, username: str) -> int:
     # KAMUS LOKAL
         # n_baris, i : int
-        # isi_data : matriks of string
+        # isi_data : matrix of string
     # ALGORITMA
     isi_users = users.isi
     n_baris = users.n_baris
@@ -196,3 +196,4 @@ def cari_index_username(users: Data, username: str) -> int:
         if(username == isi_users[i][0]): # username ditemukan
             return i
     return -1
+

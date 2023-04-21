@@ -12,7 +12,7 @@ class Data:
 
 # Fungsi load(path)
 # Membaca data csv di lokasi "path" dan mengembalikan data dalam format [isi_data, n_baris, n_kolom] 
-def load(path: str) -> Data:
+def data_load(path: str) -> Data:
     # KAMUS LOKAL
         # n_baris, n_kolom, i : int
         # line : str
@@ -54,17 +54,17 @@ def load(path: str) -> Data:
 
 # Fungsi save(path, nama_file, data)
 # Membaca data csv di lokasi "path" dan mengembalikan [data, jumlah_baris, jumlah_kolom], data dalam bentuk matriks 
-def save(path: str, nama_file: str, data: list[list[str],int,int]) -> None:
+def data_save(path: str, nama_file: str, data: Data) -> None:
     # KAMUS LOKAL
         # n_baris, n_kolom, i, j : int
         # line : str
         # file : file
         # isi_data : matriks of string
     # ALGORITMA
-    file = open(path,"w+")
-    isi_data = data[0]
-    n_baris = data[1]
-    n_kolom = data[2]
+    file = open(path+"/"+nama_file+".csv","w+")
+    isi_data = data.isi
+    n_baris = data.n_baris
+    n_kolom = data.n_kolom
     # Tulis ulang label/ baris 1
     if(nama_file == "user"):
         file.write("username;password;role\n")
@@ -76,14 +76,14 @@ def save(path: str, nama_file: str, data: list[list[str],int,int]) -> None:
         line = ""
         for j in range(n_kolom):
             line += isi_data[i][j]
-            line += ";"
+            if(j != n_kolom-1):
+                line += ";"
         if(i != n_baris-1):
             line += "\n"
         file.write(line)
     file.close()
 
-
 # PENYIMPANAN DATA
-users: Data = load("src/user.csv")                      
-candi: Data = load("src/candi.csv")                    
-bahan_bangunan: Data = load("src/bahan_bangunan.csv") 
+users: Data = data_load("src/user.csv")                      
+candi: Data = data_load("src/candi.csv")                    
+bahan_bangunan: Data = data_load("src/bahan_bangunan.csv") 

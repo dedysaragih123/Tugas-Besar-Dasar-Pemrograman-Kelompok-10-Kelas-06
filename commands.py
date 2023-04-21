@@ -5,25 +5,26 @@
 4 8 12 16 20 - Dedy
 """
 
-from tools import string_strip, string_in_array, cari_index_username, data_remove, data_append, int_min, int_maks
-from tools import string_leksikografis_min, string_leksikografis_maks
+from tools import cari_index_username, data_remove, data_append, int_min, int_maks
+from tools import string_split, string_strip, string_in_array, string_leksikografis_min, string_leksikografis_maks
+from numgen import randomize
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["", "", ""]
 # current_login : array [0..2] of string = ["", "", ""]
 
-from data import Data, users, candi, bahan_bangunan
+from data import data_save, data_load, Data
 # type Data : < isi_data : matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
 
 # Prosedur run(command):
 # Membaca masukkan dari user dan melakukan command tersebut
-def run(command: str) -> None:  
+def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:  
     command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
     if(command == "login"):
-        current_login = login(current_login)
+        current_login = login(current_login, users)
     elif(command == "logout"):
         current_login = logout(current_login)
     elif(current_login == ["" for _ in range(3)]):
@@ -69,8 +70,13 @@ def run(command: str) -> None:
             pass
         elif(command == "hancurkancandi"):
             pass
+        elif(command == "ayamberkokok"):
+            if(current_login[2] == "roro_jonggrang"):
+                ayamberkokok(candi)
+            else:
+                print("ayamberkokok hanya dapat diakses oleh akun Roro Jonggrang.")
         elif(command == "save"):
-            pass
+            save(users, candi, bahan_bangunan)
         elif(command == "help"):
             pass
         elif(command == "exit"):
@@ -82,7 +88,7 @@ def run(command: str) -> None:
 # F01 - Login 
 # Fungsi login(current_login)
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
-def login(current_login: list[str]) -> list[str]: 
+def login(current_login: list[str], users: Data) -> list[str]: 
     # KAMUS LOKAL
         # index : int
         # username, password : str
@@ -195,7 +201,7 @@ def hapusjin(users: Data, candi: Data) -> None:
     # KAMUS LOKAL
         # n_baris_candi, i, index : int
         # username, jawab : str
-        # isi_candi : matriks of string
+        # isi_candi : matrix of string
     # ALGORITMA
     # unpack data
     isi_candi = candi.isi
@@ -281,7 +287,7 @@ def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
         # n_jin, count_maks, count_min, candi_maks, candi_min, index_jin_maks, index_jin_min  : int
         # count_candi_jin : array of integer
         # jin_maks, jin min, jin : array of string
-        # isi_users, isi_candi, isi_bahan_bangunan : matriks of string
+        # isi_users, isi_candi, isi_bahan_bangunan : matrix of string
     # ALGORITMA
     # unpack data
     isi_users = users.isi
@@ -355,12 +361,37 @@ def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
 # F11 - Hancurkan Candi
 
 # F12 - Ayam Berkokok
+# Fungsi ayamberkokok()
+def ayamberkokok (candi: Data) -> None:
+    # KAMUS LOKAL
+        # i, banyak_candi, n_baris_candi : int
+        # isi_candi : matrix of string
+    # ALGORITMA
+    # unpack data
+    isi_candi = candi.isi
+    n_baris_candi = candi.n_baris
+    # hitung banyak candi
+    banyak_candi = 0
+    for i in range(n_baris_candi):
+        if(isi_candi[i][1] != ""):
+            banyak_candi += 1
+    print("Jumlah Candi: " ,banyak_candi )
+    if(banyak_candi >= 100):
+        print("Yah, Bandung Bondowoso memenangkan permainan!")
+    else: # banyak_candi < 100
+        print("\nSelamat, Roro Jonggrang memenangkan permainan!")
+        print("\n*Bandung Bondowoso angry noise*")
+        print("Roro Jonggrang dikutuk menjadi candi.")
+
+    # KELUAR PROGRAM BELUM DIBUAT!!!
+
 
 # F13 - Load (Gunakan argparse)
 # Prosedur load()
 # Menggunakan argparse agar dapat meload / membuka kembali data yang sudah disave sebelumnya, 
 # prosedur ini sendiri dijalankan hanya sekali saja pada command line / terminal
-def load() -> None:
+def load() -> list[Data]:
+    import os
     import argparse
     # KAMUS LOKAL 
         # parser, args : objek dari library argparse
@@ -368,21 +399,50 @@ def load() -> None:
     parser = argparse.ArgumentParser(add_help=False,usage='%(prog)s <nama_folder>')
     parser.add_argument("nama_folder",nargs="?",type=str,default="")
     args = parser.parse_args() 
-    if(args.nama_folder == ""):
+    path = "save/"+args.nama_folder
+    if(path == "save/"):
         print("Tidak ada nama folder yang diberikan!\n")
         parser.print_usage()
-        exit()
-    elif(args.nama_folder == "src" ): # "src" karena file yang berisi data csv bernama src
+        return []
+    elif(os.path.exists(path)):
         print("Loading...")
-        # load data
+        users = data_load(path+"/user.csv")
+        candi = data_load(path+"/candi.csv")
+        bahan_bangunan = data_load(path+"/bahan_bangunan.csv")
         print("Selamat datang di program \"Manajerial Candi\"")
+        return [users,candi,bahan_bangunan]
     else:
-        print(f"Folder \"{args.nama_folder}\" tidak ditemukan.")
-        exit()
+        print(f"Folder \"{path}\" tidak ditemukan.")
+        return []
 
-# F14
-def save():
-    pass
+# F14 - Save
+# Prosedur save()
+# Menyimpan data pada folder dengan parent folder "save"
+def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
+    import os
+    # KAMUS LOKAL
+        # path, current_path : str
+        # file_baru : bool
+        # path_spilted : matrix of string
+    # ALGORITMA
+    path = "save/" + input("Masukkan nama folder: ")
+    print("\nSaving...\n")
+    path_splited = string_split(path,"/")
+    current_path = ""
+    file_baru = False
+    for dir in path_splited:
+        current_path += dir
+        if(not os.path.exists(current_path)):
+            file_baru = True
+            print(f"Membuat folder {current_path}...")
+            os.mkdir(current_path)
+        current_path += "/"
+    if(file_baru):
+        print()
+    data_save(path, "user", users)
+    data_save(path, "candi", candi)
+    data_save(path, "bahan_bangunan", bahan_bangunan)
+    print(f"Berhasil menyimpan data di folder {path}!")
 
 # F15
 
@@ -398,5 +458,4 @@ def exit():
         quit()
     else: 
         exit()
-
 
