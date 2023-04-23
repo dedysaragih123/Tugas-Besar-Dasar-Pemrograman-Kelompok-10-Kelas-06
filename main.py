@@ -5,7 +5,8 @@ if(semua_data != []): # load berhasil
   candi = semua_data[1]
   bahan_bangunan = semua_data[2] 
   # UNTUK MENJALANKAN PROGRAM, KETIK PADA TERMINAL/CONSOLE :
-  # python main.py src
+  # python main.py nama_folder 
+  # cth: python main.py abcde
 
   # type Data : < isi: matriks of string,
   #               n_baris : int,

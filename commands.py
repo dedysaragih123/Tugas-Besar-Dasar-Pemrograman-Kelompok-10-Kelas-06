@@ -5,9 +5,9 @@
 4 8 12 16 20 - Dedy
 """
 
-from tools import cari_index_username, data_remove, data_append, int_min, int_maks
-from tools import string_split, string_strip, string_in_array, string_leksikografis_min, string_leksikografis_maks
-from numgen import randomize
+from tools import cari_index_username, data_remove, data_append, int_min, int_maks, int_join, generate_bahan_bangunan
+from tools import string_split, string_strip, string_append, string_in_array, string_leksikografis_min, string_leksikografis_maks
+
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["", "", ""]
@@ -54,11 +54,20 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
             else:
                 print("Ubahjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "bangun"):
-            pass
+            if(current_login[2] == "jin_pembangun"):
+                bangun(users,candi,bahan_bangunan,current_login[0])
+            else:
+                print("bangun hanya dapat diakses oleh akun Jin Pembangun")
         elif(command == "kumpul"):
-            pass
+            if(current_login[2] == "jin_pengumpul"):
+                kumpul(bahan_bangunan,1,False)
+            else:
+                print("kumpul hanya dapat diakses oleh akun Jin Pembangun")
         elif(command == "batchkumpul"):
-            pass
+            if(current_login[2] == "bandung_bondowoso"):
+                batchkumpul(users,bahan_bangunan)
+            else:
+                print("batchkumpul hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "batchbangun"):
             pass
         elif(command == "laporanjin"):
@@ -265,16 +274,100 @@ def ubahjin(users: Data) -> None:
     users.isi = isi_users
 
 # F06 - Jin Pembangun
-def bangun():
-    pass
 
-# F07 - Jin Pengumpul
-def kumpul():
-    pass
+def bangun(users: Data, candi: Data, bahan_bangunan: Data, pembuat: str):
+    # unpack data
+    isi_users = users.isi
+    isi_candi = candi.isi
+    isi_bahan_bangunan = bahan_bangunan.isi 
+    n_baris_candi = candi.n_baris
+    # bahan dalam format [pasir,batu,air]
+    bahan_dimiliki = [int(isi_bahan_bangunan[0][2]),int(isi_bahan_bangunan[1][2]),int(isi_bahan_bangunan[2][2])]
+    bahan_diperlukan = generate_bahan_bangunan()
+    if(bahan_dimiliki[0] < bahan_diperlukan[0] or bahan_dimiliki[1] < bahan_diperlukan[1] or bahan_dimiliki[2] < bahan_diperlukan[2]):
+        print(f"# Men-generate bahan bangunan ({bahan_diperlukan[0]} pasir, {bahan_diperlukan[1]} batu, dan {bahan_diperlukan[2]} air)")
+        print(f"# Memiliki {bahan_dimiliki[0]} pasir, {bahan_dimiliki[1]} batu, {bahan_dimiliki[2]} air")
+        print("Bahan bangunan tidak mencukupi.")
+        print("Candi tidak bisa dibangun!")
+    else:
+        # Mengurangi bahan bangunan yang dimiliki
+        isi_bahan_bangunan[0][2] = str(int(isi_bahan_bangunan[0][2]) - bahan_diperlukan[0])
+        isi_bahan_bangunan[1][2] = str(int(isi_bahan_bangunan[1][2]) - bahan_diperlukan[1])
+        isi_bahan_bangunan[2][2] = str(int(isi_bahan_bangunan[2][2]) - bahan_diperlukan[2])
+        bahan_bangunan.isi = isi_bahan_bangunan
+        # Menghitung jumlah candi yang sudah dibangun 
+        count_candi = 0
+        for i in range(n_baris_candi):
+            if(isi_candi[i][1] != ""):
+                count_candi += 1
+        if(count_candi < 100): 
+            if(count_candi == n_baris_candi): # jika semua baris data candi sudah terisi make buat baris baru
+                candi = data_append(candi,[str(n_baris_candi+2),pembuat,str(bahan_diperlukan[0]),str(bahan_diperlukan[1]),str(bahan_diperlukan[2])])
+            else:
+                for i in range(n_baris_candi):
+                    if(isi_candi[i][1] == ""): # indeks candi yang kosong diisi
+                        isi_candi[i][1] = pembuat
+                        isi_candi[i][2] = str(bahan_diperlukan[0])
+                        isi_candi[i][3] = str(bahan_diperlukan[1])
+                        isi_candi[i][4] = str(bahan_diperlukan[2])
+                        candi.isi = isi_candi
+                        break
+            print("Candi berhasil dibangun.")
+            print(f"Sisa candi yang perlu dibangun: {100-count_candi}")
+        else:
+            print("Candi berhasil dibangun.")
+            print("Sisa candi yang perlu dibangun: 0")
+
+# F07 - Jin Pengumpul ....  REKURSIF!!
+# Prosedur kumpul(bahan_bangunan)    
+# Mengumpulkan bahan bangunan yang jumlahnya secara acak
+def kumpul(bahan_bangunan: Data, jumlah_loop :int, kumpul_batch:bool) -> list[int]:
+    # KAMUS LOKAL
+        # bahan_dikumpul : array[0..2] of integer
+        # isi_bahan_bangunan : matrix of string
+    # ALGORITMA
+    # unpack data
+    isi_bahan_bangunan = bahan_bangunan.isi
+    # menentukan jumlah bahan yang dikumpul (acak)
+    # bahan_dikumpul dalam format [pasir, batu, air]
+    bahan_dikumpul = generate_bahan_bangunan()
+    # menambahkan bahan bangunan yang dikumpul ke bahan bangunan total
+    isi_bahan_bangunan[0][2] = str(int(isi_bahan_bangunan[0][2]) + bahan_dikumpul[0])
+    isi_bahan_bangunan[1][2] = str(int(isi_bahan_bangunan[1][2]) + bahan_dikumpul[1])
+    isi_bahan_bangunan[2][2] = str(int(isi_bahan_bangunan[2][2]) + bahan_dikumpul[2])
+    bahan_bangunan.isi = isi_bahan_bangunan
+    if(kumpul_batch == False): # jika bukan batch kumpul maka tidak perlu diprint
+        print(f"Jin menemukan {bahan_dikumpul[0]} pasir, {bahan_dikumpul[1]} batu, dan {bahan_dikumpul[2]} air.")
+    elif(jumlah_loop != 1): # jika kumpul_batch = True, jika jumlah_loop yang perlu dilakukan lebih dari 1 maka perlu rekursif
+        return int_join(bahan_dikumpul,kumpul(bahan_bangunan,jumlah_loop-1,True),3)
+    else: # jika jumlah_loop = 1 maka tidak perlu rekursif
+        return bahan_dikumpul
 
 # F08 - Batch Kumpul/Bangun
-def batchkumpul():
-    pass
+# Prosedur batchkumpul(users, bahan_bangunan)
+# Melakukan pengumpulan bahan bangunan oleh semua jin pengumpul yang ada 
+def batchkumpul(users: Data, bahan_bangunan: Data) -> None:
+    # KAMUS LOKAL
+        # i, n_baris_users, count_jin_pengumpul : int
+        # hasil_kumpul : array[0..2] of integer
+        # isi_users : matrix of string
+    # ALGORITMA
+    # unpack data
+    isi_users = users.isi
+    n_baris_users = users.n_baris
+    # Hitung jumlah jin pengumpul
+    count_jin_pengumpul = 0
+    for i in range(n_baris_users):
+        if(isi_users[i][2] == "jin_pengumpul"):
+            count_jin_pengumpul += 1
+    if(count_jin_pengumpul == 0): # tidak ada jin pengumpul
+        print("Kumpul gagal. Anda tidak punya jin pengumpul. Sialhkan summon terlebih dahulu.")
+    else: # ada jin pengumpul
+        print(f"Mengerahkan {count_jin_pengumpul} jin untuk mengumpulkan bahan.")
+        # mengumpulkan bahan
+        hasil_kumpul = kumpul(bahan_bangunan,count_jin_pengumpul,True)
+        print(f"Jin menemukan total {hasil_kumpul[0]} pasir, {hasil_kumpul[1]} batu, dan {hasil_kumpul[2]} air.")
+    
 def batchbangun():
     pass
 
@@ -310,15 +403,24 @@ def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     print(f"> Total Jin Pengumpul: {total_pengumpul}")
     print(f"> Total Jin Pembangun: {total_pembangun}")
 
-    # MENCARI JIN TERMALAS DAN TERAJIN
+    # mencari jin termalas dan terajin
     if(n_baris_candi == 0):
         print("> Jin Terajin: -")
         print("> Jin Termalas: -")
     else:
-        n_jin = n_baris_users - 2 # -2 karena akun bondowoso dan Roro bukan jin
-        jin = ["" for _ in range(n_jin)]
-        for i in range(n_jin):
-            jin[i] = isi_users[i+2][0]
+        # mencari semua jin pembangun 
+        jin = ["" for _ in range(total_pembangun)]
+        n_jin = total_pembangun
+        index = 0
+        for i in range(n_baris_users):
+            if(isi_users[i][2] == "jin_pembangun"):
+                jin[index] = isi_users[i][0]
+        # memastikan semua pembuat candi ada dalam array jin, jika tidak maka ditambahkan
+        for i in range(n_baris_candi):
+            index = string_in_array(jin, isi_candi[i][1], n_jin)
+            if(index == -1):
+                jin = string_append(jin, isi_candi[i][1], n_jin)
+                n_jin += 1
         count_candi_jin = [0 for _ in range(n_jin)]
         for i in range(n_baris_candi):
             index = string_in_array(jin,isi_candi[i][1],n_jin)

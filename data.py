@@ -82,8 +82,3 @@ def data_save(path: str, nama_file: str, data: Data) -> None:
             line += "\n"
         file.write(line)
     file.close()
-
-# PENYIMPANAN DATA
-users: Data = data_load("src/user.csv")                      
-candi: Data = data_load("src/candi.csv")                    
-bahan_bangunan: Data = data_load("src/bahan_bangunan.csv") 

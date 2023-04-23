@@ -55,7 +55,7 @@ def string_slice(string: str, index_awal: int, index_akhir: int) -> str:
         hasil += string[i]
     return hasil
 
-# Fungsi string_strip(string):
+# Fungsi string_strip(string)
 # Membersihkan string dari karakter kosong / spasi (" ") pada awal dan akhir string
 def string_strip(string: str) -> list[str]:
     # KAMUS LOKAL
@@ -81,6 +81,19 @@ def string_strip(string: str) -> list[str]:
     for i in range(index_awal,index_akhir):
         hasil += string[i]
     return hasil
+
+# Fungsi string_append(array,string,length)
+# Menambahkan string ke dalam array of string
+def string_append(array: list[str], string: str, length: int) -> list[str]:
+    # KAMUS LOKAL
+        # i: int
+        # array_baru : array of string
+    # ALGORITMA
+    array_baru = ["" for _ in range(length+1)]
+    for i in range(length):
+        array_baru[i] = array[i]
+    array_baru[length] = string
+    return array_baru
 
 # Fungsi string_in_array(array, string, array_length)
 # mengecek apakah string terdapat pada array jika iya maka mengembalikan indexnya jika tidak mditemukan mengembalikan nilai -1
@@ -143,6 +156,18 @@ def int_maks(array: list[int], length: int) -> int:
             maks = array[i]
     return maks
 
+# Fungsi int_join(array1, array2, length)
+# Menjumlahkan tiap index pada dua array integer yang sama ukuran
+def int_join(array1: list[int],array2: list[int], length: int,) -> list[int]:
+    # KAMUS LOKAL
+        # i : int
+        # array_hasil : array of integer
+    # ALGORITMA
+    array_hasil = [0 for _ in range(length)]
+    for i in range(length):
+        array_hasil[i] = array1[i] + array2[i]
+    return array_hasil
+
 # Fungsi data_append(data,elemen):
 # Menambahkan suatu elemen ke dalam array, Asumsi tipe array dan elemen pasti sama
 def data_append(data: Data, elemen: list[str]) -> Data:
@@ -197,3 +222,12 @@ def cari_index_username(users: Data, username: str) -> int:
             return i
     return -1
 
+
+# Fungsi generate_bahan_bangunan()
+# Mengembalikan bahan bangunan yang sudah random
+from numgen import randomize # import fungsi untuk angka random
+def generate_bahan_bangunan():
+    pasir = randomize(1,5)
+    batu = randomize(1,5)
+    air = randomize(1,5)
+    return [pasir, batu, air]
