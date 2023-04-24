@@ -248,17 +248,15 @@ def cari_index_candi(candi: Data, jin_pembuat: str) -> list[list[int],int]:
 
 # Fungsi matrix_string_join(array, matriks, n_baris_matriks, n_kolom_matriks)
 # Menggabungkan array of string ke dalam matrix of string
-def matrix_string_join(array: list[str], matriks: list[list[str]], n_baris_matriks: int, n_kolom_matriks: int) -> list[list[str]]:
+def matrix_str_join(array: list[str], matriks: list[list[str]], n_baris: int, n_kolom: int) -> list[list[str]]:
     # KAMUS LOKAL
         # i : int
         # hasil : matrix of string
     # ALGORITMA
-    print(n_baris_matriks, matriks)
-    hasil = [["" for _ in range(n_kolom_matriks)] for _ in range(n_baris_matriks+1)]
-    for i in range(n_baris_matriks):
-        print(hasil, i, sep=" - ")
+    hasil = [["" for _ in range(n_kolom)] for _ in range(n_baris+1)]
+    for i in range(n_baris):
         hasil[i] = matriks[i]
-    hasil[n_baris_matriks] = array
+    hasil[n_baris] = array
     return hasil
 
 # Fungsi generate_bahan_bangunan()

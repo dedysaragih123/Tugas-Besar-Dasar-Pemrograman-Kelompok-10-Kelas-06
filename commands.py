@@ -7,7 +7,7 @@
 import os
 from tools import cari_index_username, data_remove, data_append, int_min, int_maks, int_join, generate_bahan_bangunan
 from tools import string_split, string_strip, string_append, string_in_array, string_leksikografis_min, string_leksikografis_maks
-from tools import cari_index_candi, matrix_string_join
+from tools import cari_index_candi, matrix_str_join
 
 # untuk menyimpan data login, saat kosong bernilai ["","",""]
 current_login = ["", "", ""]
@@ -145,7 +145,7 @@ def logout(current_login: list[str]) -> list[str]:
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
         return current_login
-    else:
+    else: # sudah login
         current_login = ["" for _ in range(3)]
         print("Logout berhasil! ")
         return ["", "", ""]
@@ -160,12 +160,12 @@ def summonjin(users: Data) -> None:
         # username_valid : bool
         # isi_users : matrix of string 
     # ALGORITMA
-    #unpack data
+    # unpack data
     isi_users = users.isi
     n_baris = users.n_baris
-    if(users.n_baris == 102):
+    if(users.n_baris == 102): # 102 terdiri dari 100 jin, 1 Bandung bondowoso, 1 Roro Jonggrang
         print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
-    else:
+    else: # karena jumlah jin < 100
         print("Jenis jin yang dapat dipanggil:")
         print("  (1) Pengumpul - Bertugas mengumpulkan bahan bangunan")
         print("  (2) Pembangun - Bertugas membangun candi")
@@ -185,8 +185,13 @@ def summonjin(users: Data) -> None:
                 print(f"Tidak ada jenis jin bernomor \"{jenis_jin}\"!")
         # membuat username yang valid
         while True:
-            username = input("\nMasukkan username jin: ")
+            # ASUMSI : username alphanumeric (hanya terdiri dari angka dan huruf)
+            username = input("\nMasukkan username jin: ") 
+            if(username[0] == " "):
+                print("Username tidak boleh dimulai dengan spasi (\" \")")
+                continue
             username_valid = True
+            # menentukan apakah username sudah diambil atau belum
             for i in range(n_baris):
                 if(isi_users[i][0] == username):
                     print(f"\nUsername \"{username}\" sudah diambil!")
@@ -203,7 +208,7 @@ def summonjin(users: Data) -> None:
             else:
                 print("\nPassword panjangnya harus 5-25 karakter!")
             print()
-        # tambahkan data pada users
+        # menambahkan data jin
         users = data_append(users,[username,password,role])
         print("Mengumpulkan sesajen...\nMenyerahkan sesajen...\nMembacakan mantra...")
         print(f"\nJin {username} berhasil dipanggil!")
@@ -271,9 +276,10 @@ def ubahjin(users: Data) -> None:
         print("\nTidak ada jin dengan username tersebut.")
     users.isi = isi_users
 
-# F06 - Jin Pembangun
-# BELUM SELESAI
-def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: int, jumlah_loop :int, bangun_batch: bool):
+# F06 - Jin Pembangun .... REKURSIF!!
+# Fungsi bangun(candi,bahan_bangunan, jin_pembangun, length, jumlah_loop, bangun_batch)
+# Membangun candi, jika jumlah jin_pembangun > 1 maka pembangunan dilakukan secara rekursif
+def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: int, jumlah_loop :int, bangun_batch: bool) -> list[list[str]]:
     # unpack data
     isi_candi = candi.isi
     isi_bahan_bangunan = bahan_bangunan.isi 
@@ -282,7 +288,6 @@ def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: 
     bahan_dimiliki = [int(isi_bahan_bangunan[0][2]),int(isi_bahan_bangunan[1][2]),int(isi_bahan_bangunan[2][2])]
     bahan_diperlukan = generate_bahan_bangunan()
     data_hasil = [jin_pembangun[length-jumlah_loop],str(bahan_diperlukan[0]),str(bahan_diperlukan[1]),str(bahan_diperlukan[2])]
-
     if(bangun_batch == False): # bangun 1 candi saja
         if(bahan_dimiliki[0] < bahan_diperlukan[0] or bahan_dimiliki[1] < bahan_diperlukan[1] or bahan_dimiliki[2] < bahan_diperlukan[2]):
             # candi tidak dibangun
@@ -320,14 +325,12 @@ def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: 
                 print("Sisa candi yang perlu dibangun: 0")
     elif(jumlah_loop != 1): # karena jumlah_loop > 1 maka perlu rekursif (sebab batch_bangun)
         #return matrix_string_join(data_hasil,bangun(candi,bahan_bangunan,jin_pembangun,length,jumlah_loop-1,True),jumlah_loop,4)
-        return [data_hasil] + bangun(candi,bahan_bangunan,jin_pembangun,length,jumlah_loop-1,True)
+        return matrix_str_join(data_hasil,bangun(candi,bahan_bangunan,jin_pembangun,length,jumlah_loop-1,True),jumlah_loop-1,4)
     else: # karena sudah loop terakhir maka rekursif dan berhenti
         return [data_hasil]
-    
-    
 
 # F07 - Jin Pengumpul ....  REKURSIF!!
-# Prosedur kumpul(bahan_bangunan)    
+# Fungsi kumpul(bahan_bangunan)    
 # Mengumpulkan bahan bangunan yang jumlahnya secara acak
 def kumpul(bahan_bangunan: Data, jumlah_loop :int, kumpul_batch:bool) -> list[int]:
     # KAMUS LOKAL
@@ -382,8 +385,11 @@ def batchbangun(users: Data, candi: Data, bahan_bangunan: Data):
     # unpack data
     isi_users = users.isi
     isi_candi = candi.isi
+    isi_bahan_bangunan = bahan_bangunan.isi
     n_baris_users = users.n_baris
     n_baris_candi = candi.n_baris
+    bahan_dimiliki = [int(isi_bahan_bangunan[0][2]),int(isi_bahan_bangunan[1][2]),int(isi_bahan_bangunan[2][2])]
+
     # Hitung jumlah jin pembangun
     count_jin_pembangun = 0
     for i in range(n_baris_users):
@@ -404,8 +410,33 @@ def batchbangun(users: Data, candi: Data, bahan_bangunan: Data):
         for i in range(n_baris_candi):
             if(isi_candi[i][1] != ""):
                 count_candi += 1
-        print(f"Mengerahkan {count_jin_pembangun} jin untuk mengumpulkan bahan.")
-        print(bangun(candi,bahan_bangunan,jin_pembangun,count_jin_pembangun,count_jin_pembangun,True))
+        data_pembangunan = bangun(candi,bahan_bangunan,jin_pembangun,count_jin_pembangun,count_jin_pembangun,True)
+        total_pasir = 0
+        total_batu = 0
+        total_air = 0
+        for i in range(count_jin_pembangun):
+            total_pasir += int(data_pembangunan[i][1])
+            total_batu += int(data_pembangunan[i][2])
+            total_air += int(data_pembangunan[i][3])
+        print(f"Mengerahkan {count_jin_pembangun} jin untuk membangun candi dengan total bahan {total_pasir} pasir, {total_batu} batu, dan {total_air} air.")
+        if(total_pasir > bahan_dimiliki[0] or total_batu > bahan_dimiliki[1] or total_air > bahan_dimiliki[2]):
+            kurang_pasir = 0
+            kurang_batu = 0
+            kurang_air = 0
+            if(total_pasir > bahan_dimiliki[0]):
+                kurang_pasir = total_pasir - bahan_dimiliki[0]
+            if(total_batu > bahan_dimiliki[1]):
+                kurang_batu = total_batu - bahan_dimiliki[1]
+            if(total_batu > bahan_dimiliki[2]):
+                kurang_air = total_air - bahan_dimiliki[2]
+            print(f"Bangun gagal. Kurang {kurang_pasir} pasir, {kurang_batu} batu, dan {kurang_air} air.")
+        else: # bahan bangunan memenuhi bahan yang diperlukan untuk membangun
+            isi_bahan_bangunan[0][2] = str(int(isi_bahan_bangunan[0][2]) - total_pasir)
+            isi_bahan_bangunan[1][2] = str(int(isi_bahan_bangunan[1][2]) - total_batu)
+            isi_bahan_bangunan[2][2] = str(int(isi_bahan_bangunan[2][2]) - total_air)
+            bahan_bangunan.isi = isi_bahan_bangunan
+            candi = data_append(candi,)
+            print(f"Jin berhasil membangun total {count_jin_pembangun} candi.")
 
 # F09 - Laporan Jin
 # Prosedur laporanjin(users,candi,bahan_bangunan)
