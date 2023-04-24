@@ -212,16 +212,54 @@ def data_remove(data: Data, index: int) -> Data:
 # Mencari username pada data users, jika tidak ditemukan maka mengembalikan -1, jika ditemukan maka mengembalikan index
 def cari_index_username(users: Data, username: str) -> int:
     # KAMUS LOKAL
-        # n_baris, i : int
+        # n_baris_users, i : int
         # isi_data : matrix of string
     # ALGORITMA
+    # unpack data
     isi_users = users.isi
-    n_baris = users.n_baris
-    for i in range(n_baris):
+    n_baris_users = users.n_baris
+    for i in range(n_baris_users):
         if(username == isi_users[i][0]): # username ditemukan
             return i
     return -1
 
+# Fungsi cari_index_candi(candi, pembuat)
+# Mencari semua indeks candi yang dibuat oleh jin_pembuat
+def cari_index_candi(candi: Data, jin_pembuat: str) -> list[list[int],int]:
+    # KAMUS LOKAL
+        # n_baris_candi, i, count_candi : int
+        # indexs : array of integer
+        # isi_candi : matrix of string
+    # ALGORITMA
+    # unpack data
+    isi_candi = candi.isi
+    n_baris_candi = candi.n_baris
+    # hitung jumlah candi yang telah dibuat oleh jin_pembuat
+    count_candi = 0
+    for i in range(n_baris_candi):
+        if(isi_candi[i][1] == jin_pembuat):
+            count_candi += 1
+    # mencari semua indeks candi yang telah dibuat oleh jin_pembuat
+    indexs = [0 for _ in range(count_candi)]
+    for i in range(n_baris_candi):
+        if(isi_candi[i][1] == jin_pembuat):
+            indexs[0] == i
+    return [indexs,count_candi]
+
+# Fungsi matrix_string_join(array, matriks, n_baris_matriks, n_kolom_matriks)
+# Menggabungkan array of string ke dalam matrix of string
+def matrix_string_join(array: list[str], matriks: list[list[str]], n_baris_matriks: int, n_kolom_matriks: int) -> list[list[str]]:
+    # KAMUS LOKAL
+        # i : int
+        # hasil : matrix of string
+    # ALGORITMA
+    print(n_baris_matriks, matriks)
+    hasil = [["" for _ in range(n_kolom_matriks)] for _ in range(n_baris_matriks+1)]
+    for i in range(n_baris_matriks):
+        print(hasil, i, sep=" - ")
+        hasil[i] = matriks[i]
+    hasil[n_baris_matriks] = array
+    return hasil
 
 # Fungsi generate_bahan_bangunan()
 # Mengembalikan bahan bangunan yang sudah random
