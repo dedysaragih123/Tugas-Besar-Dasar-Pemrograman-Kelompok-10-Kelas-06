@@ -3,18 +3,31 @@ from tools import cari_index_username, data_remove, data_append, int_min, int_ma
 from tools import string_split, string_strip, string_append, string_in_array, string_leksikografis_min, string_leksikografis_maks
 from tools import cari_index_candi, matrix_str_join, candi_append
 
-# untuk menyimpan data login, saat kosong bernilai ["","",""]
-current_login = ["", "", ""]
-# current_login : array [0..2] of string = ["", "", ""]
-
 from data import data_save, data_load, Data
 # type Data : < isi_data : matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
 
+# untuk menyimpan data login, saat kosong bernilai ["","",""]
+# current_login : array [0..2] of string 
+current_login = ["", "", ""]
+
+# const undo_maks : int = 100
+# undo_jin : matrix of string
+# undo_candi : matrix of string
+undo_maks = 100
+undo_jin = [["", "", "", ""] for _ in range(2 * undo_maks)]
+undo_candi = [["", "", "", ""] for _ in range(10 * undo_maks)]
+
 # Prosedur run(command):
-# Membaca masukkan dari user dan melakukan command tersebut
+# Membaca masukkan dari user dan menjalankan command tersebut berdasarkan akun login saat ini
 def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:  
+    # KAMUS LOKAL
+        # const undo_maks : int = 100
+        # length : int
+        # command_list : array of string
+        # undo_jin, undo_candi : matrix of string
+    # ALGORITMA
     command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
     if(command == "login"):
@@ -28,7 +41,9 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
     elif(command == "save"):
             save(users, candi, bahan_bangunan)
     elif(current_login == ["" for _ in range(3)]):
-        if(any(command == string for string in ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok"])):
+        command_list = ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok","undohapus"]
+        length = 13
+        if(any(command == command_list[i] for i in range(length))):
             print(f"{command} gagal!")
             print("Anda perlu login terlebih dahulu!")
         else:
@@ -41,9 +56,14 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
                 print("summonjin hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "hapusjin"):
             if(current_login[2] == "bandung_bondowoso"):
-                hapusjin(users,candi)
+                hapusjin(users,candi, undo_jin, undo_candi)
             else:
                 print("hapusjin hanya dapat diakses oleh akun Bandung Bondowoso.")
+        elif(command == "undohapus"):
+            if(current_login[2] == "bandung_bondowoso"):
+                undohapus(users,candi, undo_jin, undo_candi)
+            else:
+                print("undo hapus hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "ubahjin"):
             if(current_login[2] == "bandung_bondowoso"):
                 ubahjin(users)
@@ -91,7 +111,6 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
                 print("Ayamberkokok hanya dapat diakses oleh akun Roro Jonggrang.")
         else:
             print(f"command \"{command}\" tidak dikenal.")
-    #print(users.isi, users.n_baris, sep=" -> ")
 
 # F01 - Login 
 # Fungsi login(current_login)
@@ -210,10 +229,15 @@ def summonjin(users: Data) -> None:
 # F04 - Hilangkan Jin
 # Prosedur hapusjin(users,candi)
 # Menghapus jin serta candi yang dibuatnya
-def hapusjin(users: Data, candi: Data) -> None:
+def hapusjin(users: Data, candi: Data, undo_jin: list[list[str]], undo_candi: list[list[str]]) -> None:
+    # ASUMSI :
+        # dalam satu permainan tidak mungkin menghapus lebih dari 2*undo_maks jin
+        # dalam satu permainan tidak mungkin menghapus lebih dari 10*undo_maks candi
     # KAMUS LOKAL
-        # n_baris_candi, i, index : int
+        # const undo_maks : int = 100
+        # n_baris_candi, count_candi_hapus i, j, index : int
         # username, jawab : str
+        # candi_dihapuskan : < isi : array of integer, length : int >
         # isi_candi : matrix of string
     # ALGORITMA
     # input username
@@ -227,16 +251,57 @@ def hapusjin(users: Data, candi: Data) -> None:
         if(jawab == "Y"): # jin dihapuskan
             # menghapuskan candi yang dibuat oleh jin tersebut
             candi_dihapuskan = cari_index_candi(candi,username)
-            for i in range(candi_dihapuskan[1]):
-                candi = data_remove(candi,candi_dihapuskan[0][i])
+            count_candi_hapus = candi_dihapuskan[1]
+            # menyimpan data candi-candi yang akan dihapus
+            for i in range(count_candi_hapus-1,-1,-1):
+                for j in range(10*undo_maks):
+                    if(undo_candi[j][0] == ""):
+                        undo_candi[j] = [candi.isi[candi_dihapuskan[0][i]][1],candi.isi[candi_dihapuskan[0][i]][2],candi.isi[candi_dihapuskan[0][i]][3],candi.isi[candi_dihapuskan[0][i]][4]]
+                        break
+            # menghapus candi-candi
+            for i in range(count_candi_hapus):
+                candi = data_remove(candi,candi_dihapuskan[0][i]-i)
+            # menyimpan data jin yang akan dihapus
+            for i in range(2*undo_maks):
+                if(undo_jin[i][0] == ""):
+                    undo_jin[i] = string_append(users.isi[index],str(count_candi_hapus),3)
+                    break
+            # menghapus data jin yang dihapus
             users = data_remove(users,index)
             print("\nJin telah berhasil dihapus dari alam gaib.")
         elif(jawab != "N"): 
             print(f"Tidak ada opsi \"{jawab}\". Ulangi!")
             hapusjin(users,candi)            
 
-def undo_hapusjin():
-    pass
+# Prosedur undohapus(users,candi, undo_jin)
+# Mengembalikan keadaan jin serta candi yang telah dihapus
+def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: list[list[str]])-> None:
+    # ASUMSI :
+        # dalam satu permainan tidak mungkin menghapus lebih dari 2*undo_maks jin
+        # dalam satu permainan tidak mungkin menghapus lebih dari 10*undo_maks candi
+    # KAMUS LOKAL
+        # i, j, count_undo_candi : int
+        # username : string
+    # ALGORITMA
+    if(undo_jin[0] == ["","","",""]):
+        print("Undo gagal!")
+        print("Tidak ada jin yang sudah dihapus")
+    else:
+        for i in range((2 * undo_maks)-1, -1, -1):
+            if(undo_jin[i][0] != ""):
+                count_undo_candi = int(undo_jin[i][3])
+                username = undo_jin[i][0]
+                users = data_append(users,[undo_jin[i][0],undo_jin[i][1],undo_jin[i][2]])
+                undo_jin[i] = ["", "", "", ""]
+                break
+        for i in range(count_undo_candi):
+            for j in range((10 * undo_maks)-1, -1, -1):
+                if(undo_candi[j][0] != ""):
+                    candi_append(candi, undo_candi[j])
+                    undo_candi[j] = ["", "", "", ""]
+                    break
+        print("Undo berhasil!")
+        print(f"Jin \"{username}\" sudah kembali dengan {count_undo_candi} candi")
 
 # F05 - Ubah Tipe Jin
 # Prosedur ubahjin(users)
@@ -698,6 +763,8 @@ def help(current_login: list[str]) -> None:
         print("   Untuk memanggil jin")
         print("3. hapusjin")
         print("   Untuk menghapus jin")
+        print("4. undohapus")
+        print("   Untuk mengembalikan jin yang terhapus")
         print("4. ubahjin")
         print("   Untuk mengubah tipe jin (pengumpul/pembangun)")
         print("5. batchkumpul")

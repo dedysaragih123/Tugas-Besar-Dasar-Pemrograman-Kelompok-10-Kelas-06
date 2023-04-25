@@ -242,9 +242,11 @@ def cari_index_candi(candi: Data, jin_pembuat: str) -> list[list[int],int]:
             count_candi += 1
     # mencari semua indeks candi yang telah dibuat oleh jin_pembuat
     indexs = [0 for _ in range(count_candi)]
+    j = 0
     for i in range(n_baris_candi):
         if(isi_candi[i][1] == jin_pembuat):
-            indexs[0] == i
+            indexs[j] = i
+            j += 1
     return [indexs,count_candi]
 
 # Fungsi matrix_string_join(array, matriks, n_baris_matriks, n_kolom_matriks)
