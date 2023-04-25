@@ -279,6 +279,7 @@ def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: 
     # ASUMSI :
         # dalam satu permainan tidak mungkin menghapus lebih dari 2*undo_maks jin
         # dalam satu permainan tidak mungkin menghapus lebih dari 10*undo_maks candi
+        # undo_jin dan undo_candi berkonsep stack
     # KAMUS LOKAL
         # i, j, count_undo_candi : int
         # username : string
@@ -287,18 +288,18 @@ def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: 
         print("Undo gagal!")
         print("Tidak ada jin yang sudah dihapus")
     else:
-        for i in range((2 * undo_maks)-1, -1, -1):
-            if(undo_jin[i][0] != ""):
+        for i in range((2 * undo_maks)-1, -1, -1): # mengecek dari ujung matriks undo_jin untuk data yang terisi
+            if(undo_jin[i][0] != ""): # ditemukan data paling terakhir dimasukkan
                 count_undo_candi = int(undo_jin[i][3])
                 username = undo_jin[i][0]
-                users = data_append(users,[undo_jin[i][0],undo_jin[i][1],undo_jin[i][2]])
-                undo_jin[i] = ["", "", "", ""]
+                users = data_append(users,[undo_jin[i][0],undo_jin[i][1],undo_jin[i][2]]) 
+                undo_jin[i] = ["", "", "", ""] # karena sudah diundo maka data user dihapus dari matrix penyimpan
                 break
-        for i in range(count_undo_candi):
-            for j in range((10 * undo_maks)-1, -1, -1):
+        for i in range(count_undo_candi): # jumlah candi yang perlu di undo
+            for j in range((10 * undo_maks)-1, -1, -1): # mengecek dari ujung matriks undo_candi untuk data yang terisi
                 if(undo_candi[j][0] != ""):
                     candi_append(candi, undo_candi[j])
-                    undo_candi[j] = ["", "", "", ""]
+                    undo_candi[j] = ["", "", "", ""] # karena sudah diundo maka data candi dihapus dari matrix penyimpan
                     break
         print("Undo berhasil!")
         print(f"Jin \"{username}\" sudah kembali dengan {count_undo_candi} candi")
