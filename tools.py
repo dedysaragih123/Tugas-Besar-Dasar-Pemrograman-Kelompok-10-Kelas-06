@@ -17,7 +17,7 @@ def string_split(string: str, key: str) -> list[str]:
         # part : str
         # hasil : array of string
     # ALGORITMA
-    # Mencari jumlah bagian hasil pemisahan
+    # Mencari jumlah bagian hasil pemisahan string
     count = 1
     for i in range(len(string)):
         if(string[i] == key):
@@ -30,16 +30,17 @@ def string_split(string: str, key: str) -> list[str]:
     index_hasil = 0
     while True:
         if(index_str == len(string)):
-            break
+            break # semua karakter string sudah dicek
         part = ""
         for i in range(index_str,len(string)):
-            if(string[i] == key):
+            if(string[i] == key): # karakter pemisah tidak dimasukkan ke hasil
                 index_str += 1
                 break
-            else:
+            else: # string[i] != key
                 index_str += 1
                 part += string[i]
-        hasil[index_hasil] = part
+        # Menyimpan bagian string pada array hasil
+        hasil[index_hasil] = part 
         index_hasil += 1
     return hasil
 
@@ -181,7 +182,7 @@ def data_append(data: Data, elemen: list[str]) -> Data:
     hasil = ["" for _ in range(n_baris+1)]
     for i in range(n_baris):
         hasil[i] = isi_data[i]
-    # meletakan yang dimasukkan pada ujung matriks hasil
+    # meletakan elemen yang dimasukkan pada ujung matriks hasil
     hasil[n_baris] = elemen 
     data.isi = hasil  
     data.n_baris += 1
@@ -259,10 +260,42 @@ def matrix_str_join(array: list[str], matriks: list[list[str]], n_baris: int, n_
     hasil[n_baris] = array
     return hasil
 
+# Prosedur candi_append(candi, array)
+# Menambahkan data pembangun suatu candi ke dalam data Candi secara terurut dan mengisi index yang kosong
+def candi_append(candi: Data, array: list[str]) -> None:
+    # KAMUS LOKAL
+        # n_baris_candi, n_kolom_candi, i, index: int
+        # isi_candi, isi_candi_baru : matrix of stirng
+    # ALGORITMA
+    # unpack data
+    isi_candi = candi.isi
+    n_baris_candi = candi.n_baris
+    n_kolom_candi = candi.n_kolom
+    # mencari apakah seluruh index sudah terisi atau belum
+    index = -1
+    for i in range(n_baris_candi):
+        if(isi_candi[i][0] != str(i+1)):
+            index = i
+            break
+    if(index == -1): # seluruh index terisi
+        candi = data_append(candi,[str(n_baris_candi+1),array[0],array[1],array[2],array[3]])
+    else: # ada index yang belum terisi maka isi pada index tersebut
+        isi_candi_baru = [["" for _ in range(n_kolom_candi)] for _ in range(n_baris_candi+1)]
+        for i in range(0,index):
+            isi_candi_baru[i] = isi_candi[i]
+        for i in range(index+1,n_baris_candi+1):
+            isi_candi_baru[i] = isi_candi[i-1]
+        isi_candi_baru[index] = [str(index+1),array[0],array[1],array[2],array[3]]
+        candi.isi = isi_candi_baru
+        candi.n_baris += 1
+    
 # Fungsi generate_bahan_bangunan()
 # Mengembalikan bahan bangunan yang sudah random
 from numgen import randomize # import fungsi untuk angka random
-def generate_bahan_bangunan():
+def generate_bahan_bangunan() -> list[int]:
+    # KAMUS LOKAL
+        # pasir, batu, air : int
+    # ALGORITMA
     pasir = randomize(1,5)
     batu = randomize(1,5)
     air = randomize(1,5)
