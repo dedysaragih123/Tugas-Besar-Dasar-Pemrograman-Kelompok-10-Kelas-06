@@ -44,17 +44,20 @@ def string_split(string: str, key: str) -> list[str]:
         index_hasil += 1
     return hasil
 
-# Fungsi string_slice(string, index_awal, index_akhir):    
+# Fungsi string_slice(string, index_awal, index_akhir):    ... REKURSIF!!
 # Mengembalikan bagian string dari index_awal hingga index_akhir 
-def string_slice(string: str, index_awal: int, index_akhir: int) -> str:
+def string_slice(string: str, index_awal: int, index_akhir: int, index_sekarang: int = 0) -> str:
     # KAMUS LOKAL
-        # i : int
-        # hasil : str
+        # index_sekarang : int
     # ALGORITMA
-    hasil = ""
-    for i in range(index_awal, index_akhir):
-        hasil += string[i]
-    return hasil
+    if(index_sekarang < index_awal):
+        return string_slice(string, index_awal, index_akhir, index_sekarang+1)
+    elif(index_sekarang == len(string)):
+        return ""
+    elif(index_sekarang == index_akhir-1):
+        return string[index_sekarang]
+    else:
+        return string[index_sekarang] + string_slice(string, index_awal, index_akhir, index_sekarang+1)
 
 # Fungsi string_strip(string)
 # Membersihkan string dari karakter kosong / spasi (" ") pada awal dan akhir string
@@ -133,17 +136,19 @@ def string_leksikografis_maks(array: list[str], length: int) -> str:
             maks = array[i]
     return maks
     
-# Fungsi int_min(array,length)
+# Fungsi int_min(array,length)     ... REKURSIF !!
 # Mengembalikan nilai terkecil pada array integer
-def int_min(array: list[int], length: int)-> int:
+# ASUMSI range maksimum adalah 999999
+def int_min(array: list[int], length: int, index_sekarang: int = 0, min: int = 999999) -> int:
     # KAMUS LOKAL
-        # min, i : int
+        # min, length: int
     # ALGORITMA
-    min = array[0]
-    for i in range(length):
-        if(array[i] < min):
-            min = array[i]
-    return min
+    if(array[index_sekarang] < min):
+        min = array[index_sekarang]
+    if(index_sekarang == length-1):
+        return min
+    else:
+        return int_min(array, length, index_sekarang+1, min)
 
 # Fungsi int_mals(array,length)
 # Mengembalikan nilai terbesar pada array integer

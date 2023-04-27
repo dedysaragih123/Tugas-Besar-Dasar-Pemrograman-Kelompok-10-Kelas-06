@@ -41,7 +41,7 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
     elif(command == "save"):
             save(users, candi, bahan_bangunan)
     elif(current_login == ["" for _ in range(3)]):
-        command_list = ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok","undohapus"]
+        command_list = ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok","undohapus", "reset"]
         length = 13
         if(any(command == command_list[i] for i in range(length))):
             print(f"{command} gagal!")
@@ -97,6 +97,11 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
         elif(command == "laporancandi"):
             if(current_login[2] == "bandung_bondowoso"):
                 laporancandi(candi)
+            else:
+                print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.")
+        elif(command == "reset"):
+            if(current_login[2] == "bandung_bondowoso"):
+                reset(users,candi, bahan_bangunan, data_awal)
             else:
                 print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "hancurkancandi"):
