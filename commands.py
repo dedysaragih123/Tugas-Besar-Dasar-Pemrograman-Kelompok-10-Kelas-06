@@ -99,11 +99,6 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
                 laporancandi(candi)
             else:
                 print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.")
-        elif(command == "reset"):
-            if(current_login[2] == "bandung_bondowoso"):
-                reset(users,candi, bahan_bangunan, data_awal)
-            else:
-                print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.")
         elif(command == "hancurkancandi"):
             if(current_login[2] == "roro_jonggrang"):
                 hancurkancandi(candi)
