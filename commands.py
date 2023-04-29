@@ -127,25 +127,26 @@ def login(current_login: list[str], users: Data) -> list[str]:
         print("Login gagal!")
         print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan \"logout\" sebelum melakukan login kembali.")
         return current_login
-    # unpack data users
-    isi_users = users.isi
-    # Input data login (sudah dibersihkan dari spasi awal dan akhir)
-    username = input("Username: ")
-    password = input("Password: ")
-    # mencari index username, jika tidak ditemukan maka bernilai -1
-    index = cari_index_username(users,username)
-    if(index != -1): # username ditemukan 
-        # cek apakah password sesuai atau tidak
-        if(password == isi_users[index][1]):
-            print(f"Selamat datang, {username}!")
-            print("Masukkan command \"help\" untuk daftar command yang dapat kamu panggil")
-            return isi_users[index]
-        else: # password salah
-            print("Password salah!")
-            return ["" for _ in range(3)]
     else:
-        print("Username tidak terdaftar!")
-        return ["" for _ in range(3)]
+        # unpack data users
+        isi_users = users.isi
+        # Input data login (sudah dibersihkan dari spasi awal dan akhir)
+        username = input("Username: ")
+        password = input("Password: ")
+        # mencari index username, jika tidak ditemukan maka bernilai -1
+        index = cari_index_username(users,username)
+        if(index != -1): # username ditemukan 
+            # cek apakah password sesuai atau tidak
+            if(password == isi_users[index][1]):
+                print(f"Selamat datang, {username}!")
+                print("Masukkan command \"help\" untuk daftar command yang dapat kamu panggil")
+                return isi_users[index]
+            else: # password salah
+                print("Password salah!")
+                return ["" for _ in range(3)]
+        else:
+            print("Username tidak terdaftar!")
+            return ["" for _ in range(3)]
 
 # F02 - Logout 
 # Fungsi logout(current_login)
