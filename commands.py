@@ -125,7 +125,7 @@ def login(current_login: list[str], users: Data) -> list[str]:
     # Cek apakah sudah login atau belum
     if(current_login != ["" for _ in range(3)]):
         print("Login gagal!")
-        print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan “logout” sebelum melakukan login kembali.")
+        print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan \"logout\" sebelum melakukan login kembali.")
         return current_login
     # unpack data users
     isi_users = users.isi
