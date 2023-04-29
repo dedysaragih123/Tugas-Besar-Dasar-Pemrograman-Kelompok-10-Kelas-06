@@ -41,7 +41,7 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
     elif(command == "save"):
             save(users, candi, bahan_bangunan)
     elif(current_login == ["" for _ in range(3)]):
-        command_list = ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok","undohapus", "reset"]
+        command_list = ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok","undohapus"]
         length = 13
         if(any(command == command_list[i] for i in range(length))):
             print(f"{command} gagal!")
