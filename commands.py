@@ -123,7 +123,7 @@ def login(current_login: list[str], users: Data) -> list[str]:
         # isi_users : matrix of string
     # ALGORITMA
     # Cek apakah sudah login atau belum
-    if(current_login != ["" for _ in range(3)]):
+    if(current_login != ["", "", ""]):
         print("Login gagal!")
         print(f"Anda telah login dengan username {current_login[0]}, silahkan lakukan \"logout\" sebelum melakukan login kembali.")
         return current_login
@@ -143,10 +143,10 @@ def login(current_login: list[str], users: Data) -> list[str]:
                 return isi_users[index]
             else: # password salah
                 print("Password salah!")
-                return ["" for _ in range(3)]
+                return ["", "", ""]
         else:
             print("Username tidak terdaftar!")
-            return ["" for _ in range(3)]
+            return ["", "", ""]
 
 # F02 - Logout 
 # Fungsi logout(current_login)
@@ -155,12 +155,11 @@ def logout(current_login: list[str]) -> list[str]:
     # KAMUS LOKAL
         # current_login : array [0..2] of string
     # ALGORITMA
-    if(current_login == ["" for _ in range(3)]):
+    if(current_login == ["", "", ""]):
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
         return current_login
     else: # sudah login
-        current_login = ["" for _ in range(3)]
         print("Logout berhasil! ")
         return ["", "", ""]
 
