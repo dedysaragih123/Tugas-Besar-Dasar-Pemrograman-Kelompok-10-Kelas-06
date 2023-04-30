@@ -26,7 +26,7 @@ undo_candi = [["", "", "", ""] for _ in range(10 * undo_maks)]
 
 # Prosedur run(command):
 # Membaca masukkan dari user dan menjalankan command tersebut berdasarkan akun login saat ini
-def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:  
+def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
         # const undo_maks : int = 100
         # length : int
@@ -734,17 +734,22 @@ def load() -> list[Data]:
 # Menyimpan data pada folder dengan parent folder "save"
 def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # path, current_path : str
+        # count_splited : integer
+        # path, current_path,  : str
         # file_baru : bool
-        # path_spilted : matrix of string
+        # path_spilted : array of string
     # ALGORITMA
     path = "save/" + input("Masukkan nama folder: ")
     print("Saving...")
+    count_spiltted = 1
+    for i in range(len(path)):
+        if(path[i] == "/"):
+            count_spiltted += 1
     path_splited = string_split(path,"/")
     current_path = ""
     file_baru = False
-    for dir in path_splited:
-        current_path += dir
+    for i in range(count_spiltted):
+        current_path += path_splited[i]
         if(not os.path.exists(current_path)):
             file_baru = True
             print(f"Membuat folder {current_path}...")
