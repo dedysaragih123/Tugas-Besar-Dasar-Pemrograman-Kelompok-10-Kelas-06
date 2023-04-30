@@ -2,13 +2,13 @@
 # Berisi semua fungsi/procedur untuk command-command yang dapat digunakan
 
 # KAMUS
-# type Data : < isi : matriks of string,
-#               n_baris : int,
-#               n_kolom : int >
-# const undo_maks : int = 100
-# undo_jin : matrix of string
-# undo_candi : matrix of string
-# current_login : array [0..2] of string 
+    #type Data : < isi : array [0..n_baris-1] of array [0..n_kolom-1] of string,
+    #               n_baris : integer,
+    #               n_kolom : integer  >
+    # const undo_maks : int = 100
+    # undo_jin : array [0..(2*undo_maks)-1] of array [0..3] of string
+    # undo_candi : array [0..(10*undo_maks)-1] of array [0..3] of string
+    # current_login : array [0..2] of string
 
 # ALGORITMA
 # import modul dan fungsi buatan
@@ -28,10 +28,8 @@ undo_candi = [["", "", "", ""] for _ in range(10 * undo_maks)]
 # Membaca masukkan dari user dan menjalankan command tersebut berdasarkan akun login saat ini
 def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # const undo_maks : int = 100
-        # length : int
-        # command_list : array of string
-        # undo_jin, undo_candi : matrix of string
+        # length : integer
+        # command_list : array [0..length-1] of string
     # ALGORITMA
     command = string_strip(command) # Agar command bersih dari spasi kosong
     global current_login
@@ -122,10 +120,9 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
 def login(current_login: list[str], users: Data) -> list[str]: 
     # KAMUS LOKAL
-        # index : int
-        # username, password : str
-        # current_login : array [0..2] of string
-        # isi_users : matrix of string
+        # index : integer
+        # username, password : string
+        # isi_users : array[0..users.n_baris-1] of array[0..users.n_kolom-1] of string
     # ALGORITMA
     # Cek apakah sudah login atau belum
     if(current_login != ["", "", ""]):
@@ -173,10 +170,10 @@ def logout(current_login: list[str]) -> list[str]:
 # Mensummon / membuat jin baru
 def summonjin(users: Data) -> None:
     # KAMUS LOKAL
-        # n_baris, i : int
-        # jenis_jin, username, password, role : str
-        # username_valid : bool
-        # isi_users : matrix of string 
+       # n_baris, i : integer
+        # jenis_jin, username, password, role : string
+        # username_valid : boolean
+        # isi_users : array [0..users.n_baris-1] of array [0..users.n_kolom-1] of string 
     # ALGORITMA
     # unpack data
     isi_users = users.isi
@@ -239,11 +236,10 @@ def hapusjin(users: Data, candi: Data, undo_jin: list[list[str]], undo_candi: li
         # dalam satu permainan tidak mungkin menghapus lebih dari 2*undo_maks jin
         # dalam satu permainan tidak mungkin menghapus lebih dari 10*undo_maks candi
     # KAMUS LOKAL
-        # const undo_maks : int = 100
-        # n_baris_candi, count_candi_hapus, i, j, index : int
-        # username, jawab : str
-        # candi_dihapuskan : < isi : array of integer, length : int >
-        # isi_candi : matrix of string
+        # n_baris_candi, count_candi_hapus, i, j, index : integer
+        # username, jawab : string
+        # candi_dihapuskan : < isi : array[0..length-1] of integer, length: integer >
+        # isi_candi : array [0..candi.n_baris-1] of array [0..candi.n_kolom-1] of string
     # ALGORITMA
     # input username
     username = input("Masukkan username jin : ")
@@ -287,7 +283,7 @@ def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: 
         # dalam satu permainan tidak mungkin menghapus lebih dari 10*undo_maks candi
         # undo_jin dan undo_candi berkonsep stack
     # KAMUS LOKAL
-        # i, j, count_undo_candi : int
+        # i, j, count_undo_candi : integer
         # username : string
     # ALGORITMA
     if(undo_jin[0] == ["","","",""]):
@@ -315,10 +311,10 @@ def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: 
 # Mengubah role dari jin, jika role pembangun maka dapat diubah ke pengumpul dan sebaliknya
 def ubahjin(users: Data) -> None:
     # KAMUS LOKAL
-        # n_baris, i, index : int
-        # username, ubah: str
-        # ditemukan : bool
-        # isi_users : matrix of string
+        # n_baris, i, index : integer
+        # username, ubah: string
+        # ditemukan : boolean
+        # isi_users : array [0..users.n_baris-1] of array [0..users.n_kolom-1] of string
     # ALGORITMA
     # unpack data 
     isi_users = users.isi
@@ -350,10 +346,10 @@ def ubahjin(users: Data) -> None:
 # Membangun candi, jika jumlah jin_pembangun > 1 maka pembangunan dilakukan secara rekursif
 def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: int, jumlah_loop :int, bangun_batch: bool) -> list[list[str]]:
     # KAMUS LOKAL
-        # n_baris_candi : int
-        # bahan_dimiliki, bahan_diperlukan : array[0..2] of int
+        # n_baris_candi : integer
+        # bahan_dimiliki, bahan_diperlukan : array[0..2] of integer
         # data_hasil : array[0..3] of string
-        # isi_bahan_bangunan  : matrix of string
+        # isi_bahan_bangunan : array [0..bahan_bangunan.n_baris-1] of array [0..bahan_bangunan.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_bahan_bangunan = bahan_bangunan.isi 
@@ -394,7 +390,7 @@ def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: 
 def kumpul(bahan_bangunan: Data, jumlah_loop: int, kumpul_batch: bool) -> list[int]:
     # KAMUS LOKAL
         # bahan_dikumpul : array[0..2] of integer
-        # isi_bahan_bangunan : matrix of string
+        # isi_bahan_bangunan : array [0..bahan_bangunan.n_baris-1] of array [0..bahan_bangunan.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_bahan_bangunan = bahan_bangunan.isi
@@ -418,9 +414,9 @@ def kumpul(bahan_bangunan: Data, jumlah_loop: int, kumpul_batch: bool) -> list[i
 # Melakukan pengumpulan bahan bangunan oleh semua jin pengumpul yang ada 
 def batchkumpul(users: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # i, n_baris_users, count_jin_pengumpul : int
+        # i, n_baris_users, count_jin_pengumpul : integer
         # hasil_kumpul : array[0..2] of integer
-        # isi_users : matrix of string
+        # isi_users : array [0..users .n_baris-1] of array [0..users.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_users = users.isi
@@ -442,10 +438,12 @@ def batchkumpul(users: Data, bahan_bangunan: Data) -> None:
 # Melakukan pembangunan candi oleh setiap jin pembangun yang ada
 def batchbangun(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # i, index, n_baris_users, count_jin_pembangun, total_pasir, total_batu, total_air, kurang_pasir, kurang_batu, kurang_air : int
-        # bahan_dimiliki : array of integer
-        # jin_pembangun : array of string
-        # isi_users, isi_bahan_bangunan, data_pembangunan : matrix of string
+        # i, index, n_baris_users, count_jin_pembangun, total_pasir, total_batu, total_air, kurang_pasir, kurang_batu, kurang_air : integer
+        # bahan_dimiliki : array[0..2] of integer
+        # jin_pembangun : array[0..count_jin_pembangun-1] of string
+        # isi_users : array [0..users.n_baris-1] of array [0..users.n_kolom-1] of string
+        # isi_bahan_bangunan : array [0..bahan_bangunan.n_baris-1] of array [0..bahan_bangunan.n_kolom-1] of string
+        # data_pembangunan : array [0..count_jin_pembangun-1] of array [0..3] of string
     # ALGORITMA
     # unpack data
     isi_users = users.isi
@@ -518,11 +516,14 @@ def batchbangun(users: Data, candi: Data, bahan_bangunan: Data) -> None:
 # Melakukan laporan jin mulai dari total jin masing-masing jenis, jin termalas dan terajin serta bahan bangunan
 def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # n_baris_users, n_baris_candi, total_jin, total_pengumpul, total_pembangun, i, index : int
-        # n_jin, count_maks, count_min, candi_maks, candi_min, index_jin_maks, index_jin_min  : int
-        # count_candi_jin : array of integer
-        # jin_maks, jin min, jin : array of string
-        # isi_users, isi_candi, isi_bahan_bangunan : matrix of string
+        # n_baris_users, n_baris_candi, total_jin, total_pengumpul, total_pembangun, i, index, n_jin, count_maks, count_min, candi_maks candi_min, index_jin_maks, index_jin_min  : integer
+        # count_candi_jin : array [0..n_jin-1] of integer
+        # jin_maks : array [0..count_maks-1] of string 
+        # jin min : array [0..count_min-1] of string 
+        # jin : array [0..total_pembangun-1] of string
+        # isi_users : array [0..users.n_baris-1] of array [0..users.n_kolom-1] of string
+        # isi_bahan_bangunan : array [0..bahan_bangunan.n_baris-1] of array [0..bahan_bangunan.n_kolom-1] of string
+        # data_pembangunan : array [0..count_jin_pembangun-1] of array [0..3] of string
     # ALGORITMA
     # unpack data
     isi_users = users.isi
@@ -606,9 +607,9 @@ def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
 # Melakukan laporan candi mulai dari jumlah candi, bahan total yang diperlukan, serta candi termurah dan termahal
 def laporancandi(candi: Data) -> None:
     # Kamus LOKAL
-        # i, n_baris_candi, harga_maks, harga_min, total_pasir, total_batu, total_air : int
-        # harga : array of integer
-        # isi_candi : matrix of string
+        # i, n_baris_candi, harga_maks, harga_min, total_pasir, total_batu, total_air : integer
+        # harga : array [0..n_baris_candi-1] of integer
+        # isi_candi : array [0..candi.n_baris-1] of array [0..candi.n_kolom-1] of string
     # ALGORTIMA
     # unpack data
     isi_candi = candi.isi
@@ -652,9 +653,9 @@ def laporancandi(candi: Data) -> None:
 # Menghancurkan candi dengan id yang diberikan
 def hancurkancandi(candi: Data) -> None:
     # KAMUS LOKAL
-        # i, index, n_baris_candi : int
-        # id, yakin : str
-        # isi_candi : matrix of string
+        # i, index, n_baris_candi : integer
+        # id, yakin : string
+        # isi_candi : array [0..candi.n_baris-1] of array [0..candi.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_candi = candi.isi
@@ -683,7 +684,7 @@ def hancurkancandi(candi: Data) -> None:
 # Menentukan pemenang dari game ini 
 def ayamberkokok (candi: Data) -> None:
     # KAMUS LOKAL
-        # i, banyak_candi : int
+        # i, banyak_candi : integer
     # ALGORITMA
     # unpack data
     banyak_candi = candi.n_baris
@@ -702,13 +703,13 @@ def ayamberkokok (candi: Data) -> None:
 # Menggunakan argparse agar dapat meload / membuka kembali data yang sudah disave sebelumnya, 
 # prosedur ini sendiri dijalankan hanya sekali saja pada command line / terminal
 def load() -> list[Data]:
-    import os
-    import argparse
     # KAMUS LOKAL 
-        # parser, args : objek dari argparse
-        # args.nama_folder : str
+        # parser, args : objek dari modul argparse
+        # args.nama_folder : string
         # users, candi, bahan_bangunan : Data
     # ALGORITMA
+    import os
+    import argparse
     parser = argparse.ArgumentParser(add_help=False,usage='%(prog)s <nama_folder>')
     parser.add_argument("nama_folder",nargs="?",type=str,default="")
     args = parser.parse_args() 
@@ -734,10 +735,10 @@ def load() -> list[Data]:
 # Menyimpan data pada folder dengan parent folder "save"
 def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # count_splited, i : integer
-        # path, current_path,  : str
-        # file_baru : bool
-        # path_spilted : array of string
+        # count_splitted, i : integer
+        # path, current_path : string
+        # file_baru : boolean
+        # path_spilted : array [0..count_splitted-1] of string
     # ALGORITMA
     path = "save/" + input("Masukkan nama folder: ")
     print("Saving...")
@@ -766,6 +767,8 @@ def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
 # Prosedur help(current_login)
 # Memberikan list semua command yang dapat digunakan tergantung pada status login
 def help(current_login: list[str]) -> None:
+    # KAMUS LOKAL
+        # current_login : array [0..2] of string
     # ALGORITMA
     print(" HELP ".center(28,"="))
     if(current_login == ["" for _ in range(3)]): # BELUM LOGIN
@@ -833,7 +836,7 @@ def help(current_login: list[str]) -> None:
 # Untuk keluar dari program, serta opsi menyimpan data sebelum keluar
 def exit(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # jawab_exit : str
+        # jawab_exit : string
     # ALGORITMA
     print("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ",end='')
     jawab_exit = input()

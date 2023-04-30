@@ -1,9 +1,10 @@
 # Program main
 # Program utama Managerial Candi
-# KAMUS
-  # type Data : < isi: matriks of string,
-  #               n_baris : int,
-  #               n_kolom : int >
+#KAMUS
+  # type Data : < isi : array [0..n_baris-1] of array [0..n_kolom-1] of string,
+  #               n_baris : integer,
+  #               n_kolom : integer  >
+  # masukkan : string
   # semua_data : array[0..2] of Data
   # users, candi, bahan_bangunan : Data
 
