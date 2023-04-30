@@ -1,6 +1,12 @@
 # B01 - Random Number Generator
+# Module Numgen
+# Berisi fungsi untuk mendapatkan angka acak (random number)
+# KAMUS
+    # seed : integer
+# ALGORITMA
 from time import time
-seed = int(time()) # seed bergantung waktu agar terus berubah
+seed = int(time()) 
+# seed bergantung waktu agar terus berubah
 
 # Fungsi randomize(lower_bound, upper_bound)
 # Mengembalikan angka random dengan algoritma Linear Congruential Generator (LCG).
