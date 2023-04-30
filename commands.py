@@ -1,20 +1,25 @@
+# Modul Commands
+# Berisi semua fungsi/procedur untuk command-command yang dapat digunakan
+
+# KAMUS
+# type Data : < isi : matriks of string,
+#               n_baris : int,
+#               n_kolom : int >
+# const undo_maks : int = 100
+# undo_jin : matrix of string
+# undo_candi : matrix of string
+# current_login : array [0..2] of string 
+
+# ALGORITMA
+# import modul dan fungsi buatan
 import os
 from tools import cari_index_username, data_remove, data_append, int_min, int_maks, int_join, generate_bahan_bangunan
 from tools import string_split, string_strip, string_append, string_in_array, string_leksikografis_min, string_leksikografis_maks
 from tools import cari_index_candi, matrix_str_join, candi_append
-
 from data import data_save, data_load, Data
-# type Data : < isi : matriks of string,
-#               n_baris : int,
-#               n_kolom : int >
 
-# untuk menyimpan data login, saat kosong bernilai ["","",""]
-# current_login : array [0..2] of string 
+# deklarasi variabel
 current_login = ["", "", ""]
-
-# const undo_maks : int = 100
-# undo_jin : matrix of string
-# undo_candi : matrix of string
 undo_maks = 100
 undo_jin = [["", "", "", ""] for _ in range(2 * undo_maks)]
 undo_candi = [["", "", "", ""] for _ in range(10 * undo_maks)]

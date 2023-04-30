@@ -12,7 +12,8 @@ seed = int(time())
 # Mengembalikan angka random dengan algoritma Linear Congruential Generator (LCG).
 def randomize(lower_bound : int, upper_bound : int) -> int:
     # KAMUS LOKAL:
-        # a, b, m, seed : int
+        # const a, b : int
+        # m, seed : int
     # ALGORITMA
     a = 1583458089
     b = 1132489760
