@@ -734,7 +734,7 @@ def load() -> list[Data]:
 # Menyimpan data pada folder dengan parent folder "save"
 def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
-        # count_splited : integer
+        # count_splited, i : integer
         # path, current_path,  : str
         # file_baru : bool
         # path_spilted : array of string
