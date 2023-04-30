@@ -4,7 +4,7 @@ from tools import string_split, string_strip, string_append, string_in_array, st
 from tools import cari_index_candi, matrix_str_join, candi_append
 
 from data import data_save, data_load, Data
-# type Data : < isi_data : matriks of string,
+# type Data : < isi : matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
 
@@ -235,7 +235,7 @@ def hapusjin(users: Data, candi: Data, undo_jin: list[list[str]], undo_candi: li
         # dalam satu permainan tidak mungkin menghapus lebih dari 10*undo_maks candi
     # KAMUS LOKAL
         # const undo_maks : int = 100
-        # n_baris_candi, count_candi_hapus i, j, index : int
+        # n_baris_candi, count_candi_hapus, i, j, index : int
         # username, jawab : str
         # candi_dihapuskan : < isi : array of integer, length : int >
         # isi_candi : matrix of string
