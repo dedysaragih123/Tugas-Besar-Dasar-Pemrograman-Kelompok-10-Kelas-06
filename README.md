@@ -1,6 +1,9 @@
-# Tugas-Besar-Dasar-Pemrograman-Kelompok-10-Kelas-06
+TUGAS BESAR DASAR PEMOGRAMAN ITB 2023
+
+Program Managerial Candi
+
 Nama anggota: 
-  (16522024) Bagaswara
-  (19622024) Serenada Cinta Sunindyo
-  (19622150) Dedy Hofmanindo Saragih
-  (19622078) Raden Francisco Trianto Bratadiningrat 
+  1. (16522024) Bagaswara
+  2. (19622024) Serenada Cinta Sunindyo
+  3. (19622150) Dedy Hofmanindo Saragih
+  4. (19622078) Raden Francisco Trianto Bratadiningrat 
