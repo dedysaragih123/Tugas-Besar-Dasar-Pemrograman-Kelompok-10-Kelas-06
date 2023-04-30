@@ -477,6 +477,7 @@ def batchbangun(users: Data, candi: Data, bahan_bangunan: Data) -> None:
             total_batu += int(data_pembangunan[i][2])
             total_air += int(data_pembangunan[i][3])
         print(f"Mengerahkan {count_jin_pembangun} jin untuk membangun candi dengan total bahan {total_pasir} pasir, {total_batu} batu, dan {total_air} air.")
+        # Mengecek apakah bahan yang dimiliki kurang atau cukup untuk bangun candi-candi
         if(total_pasir > bahan_dimiliki[0] or total_batu > bahan_dimiliki[1] or total_air > bahan_dimiliki[2]):
             kurang_pasir = 0
             kurang_batu = 0
@@ -497,7 +498,7 @@ def batchbangun(users: Data, candi: Data, bahan_bangunan: Data) -> None:
             elif(kurang_batu != 0 and kurang_air != 0):
                 print(f"Bangun gagal. Kurang {kurang_batu} batu dan {kurang_air} air.")
             elif(kurang_pasir != 0):
-                print(f"Bangun gagal. Kurang {kurang_batu} pasir.")
+                print(f"Bangun gagal. Kurang {kurang_pasir} pasir.")
             elif(kurang_batu != 0):
                 print(f"Bangun gagal. Kurang {kurang_batu} batu.")
             else: # kurang_air != 0
