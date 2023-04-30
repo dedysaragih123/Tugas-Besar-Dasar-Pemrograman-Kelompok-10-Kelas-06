@@ -273,6 +273,7 @@ def hapusjin(users: Data, candi: Data, undo_jin: list[list[str]], undo_candi: li
             print(f"Tidak ada opsi \"{jawab}\". Ulangi!")
             hapusjin(users,candi)            
 
+# B04 - Undo hapus jin
 # Prosedur undohapus(users,candi, undo_jin)
 # Mengembalikan keadaan jin serta candi yang telah dihapus
 def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: list[list[str]])-> None:
@@ -686,7 +687,7 @@ def ayamberkokok (candi: Data) -> None:
     quit()
 
 # F13 - Load (Gunakan argparse)
-# Prosedur load()
+# Fungsi load()
 # Menggunakan argparse agar dapat meload / membuka kembali data yang sudah disave sebelumnya, 
 # prosedur ini sendiri dijalankan hanya sekali saja pada command line / terminal
 def load() -> list[Data]:
@@ -695,6 +696,7 @@ def load() -> list[Data]:
     # KAMUS LOKAL 
         # parser, args : objek dari argparse
         # args.nama_folder : str
+        # users, candi, bahan_bangunan : Data
     # ALGORITMA
     parser = argparse.ArgumentParser(add_help=False,usage='%(prog)s <nama_folder>')
     parser.add_argument("nama_folder",nargs="?",type=str,default="")
@@ -766,19 +768,19 @@ def help(current_login: list[str]) -> None:
         print("   Untuk menghapus jin")
         print("4. undohapus")
         print("   Untuk mengembalikan jin yang terhapus")
-        print("4. ubahjin")
+        print("5. ubahjin")
         print("   Untuk mengubah tipe jin (pengumpul/pembangun)")
-        print("5. batchkumpul")
+        print("6. batchkumpul")
         print("   Untuk melakukan pengumpulan oleh semua jin pengumpul")
-        print("6. batchbangun")
+        print("7. batchbangun")
         print("   Untuk melakukan pembangunan oleh semua jin pembangun")
-        print("7. laporanjin")
+        print("8. laporanjin")
         print("   Untuk mengambil laporan jin")
-        print("8. laporancandi")
+        print("9. laporancandi")
         print("   Untuk mengambil laporan candi")
-        print("9. save")
+        print("10. save")
         print("   Untuk menyimpan data permainan saat ini")
-        print("10. exit")
+        print("11. exit")
         print("   Untuk keluar dari program dan kembali ke terminal")
     elif(current_login[2] == "roro_jonggrang"): # RORO JONGGRANG
         print("1. logout")
