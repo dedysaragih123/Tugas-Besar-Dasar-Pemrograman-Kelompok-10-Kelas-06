@@ -349,8 +349,13 @@ def ubahjin(users: Data) -> None:
 # Fungsi bangun(candi ,bahan_bangunan, jin_pembangun, length, jumlah_loop, bangun_batch)
 # Membangun candi, jika jumlah jin_pembangun > 1 maka pembangunan dilakukan secara rekursif
 def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: int, jumlah_loop :int, bangun_batch: bool) -> list[list[str]]:
+    # KAMUS LOKAL
+        # n_baris_candi : int
+        # bahan_dimiliki, bahan_diperlukan : array[0..2] of int
+        # data_hasil : array[0..3] of string
+        # isi_bahan_bangunan  : matrix of string
+    # ALGORITMA
     # unpack data
-    isi_candi = candi.isi
     isi_bahan_bangunan = bahan_bangunan.isi 
     n_baris_candi = candi.n_baris
     # bahan dalam format [pasir,batu,air]

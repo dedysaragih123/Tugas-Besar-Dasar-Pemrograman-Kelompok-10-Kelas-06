@@ -150,7 +150,7 @@ def int_min(array: list[int], length: int, index_sekarang: int = 0, min: int = 9
     else:
         return int_min(array, length, index_sekarang+1, min)
 
-# Fungsi int_mals(array,length)
+# Fungsi int_maks(array,length)
 # Mengembalikan nilai terbesar pada array integer
 def int_maks(array: list[int], length: int) -> int:
     # KAMUS LOKAL
