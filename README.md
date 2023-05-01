@@ -1,7 +1,9 @@
 TUGAS BESAR DASAR PEMOGRAMAN ITB 2023
 
-Program Managerial Candi
+Program Manajerial Candi
 
+Kelas 06
+Kelompok 10
 Nama anggota: 
   1. (16522024) Bagaswara
   2. (19622024) Serenada Cinta Sunindyo

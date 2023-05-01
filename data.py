@@ -1,6 +1,7 @@
-# FILE INI BERISI HAL-HAL MENGENAI DATA BAIK MENYIMPAN ATAU MENGAKSES SERTA CLASSNYA
-from tools import string_split, string_slice
+# Modul data
+# Berisi fungsi yang dapat membuat / mengakses file
 
+# KAMUS
 # type Data : < isi: matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
@@ -10,14 +11,17 @@ class Data:
         self.n_baris = n_baris
         self.n_kolom = n_kolom
 
+# ALGORITMA
+from tools import string_split, string_slice
+
 # Fungsi load(path)
 # Membaca data csv di lokasi "path" dan mengembalikan data dalam format [isi_data, n_baris, n_kolom] 
 def data_load(path: str) -> Data:
     # KAMUS LOKAL
-        # n_baris, n_kolom, i : int
-        # line : str
-        # cek_kolom, first_row : bool
-        # file : file
+        # n_baris, n_kolom, i : integer
+        # line : string
+        # cek_kolom, first_row : boolean
+        # file : open(path, "r")
         # data : Data
     # ALGORITMA
     # Mencari jumlah efektif data
@@ -56,9 +60,9 @@ def data_load(path: str) -> Data:
 # Membaca data csv di lokasi "path" dan mengembalikan [data, jumlah_baris, jumlah_kolom], data dalam bentuk matriks 
 def data_save(path: str, nama_file: str, data: Data) -> None:
     # KAMUS LOKAL
-        # n_baris, n_kolom, i, j : int
-        # line : str
-        # file : file
+        # n_baris, n_kolom, i, j : integer
+        # line : string
+        # file : open(path, "w+")
         # isi_data : matriks of string
     # ALGORITMA
     file = open(path+"/"+nama_file+".csv","w+")

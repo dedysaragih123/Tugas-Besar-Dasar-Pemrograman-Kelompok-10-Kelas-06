@@ -1,5 +1,4 @@
-# B01 - Random Number Generator
-# Module Numgen
+# Module numgen
 # Berisi fungsi untuk mendapatkan angka acak (random number)
 # KAMUS
     # seed : integer
@@ -8,12 +7,14 @@ from time import time
 seed = int(time()) 
 # seed bergantung waktu agar terus berubah
 
-# Fungsi randomize(lower_bound, upper_bound)
+# B01 - Random Number Generator
+# function randomize(lower_bound : integer, upper_bound : integer ) -> integer
 # Mengembalikan angka random dengan algoritma Linear Congruential Generator (LCG).
 def randomize(lower_bound : int, upper_bound : int) -> int:
     # KAMUS LOKAL:
-        # const a, b : int
-        # m, seed : int
+        #const a : integer = 1583458089
+        # const b : integer = 1132489760
+        # m : integer
     # ALGORITMA
     a = 1583458089
     b = 1132489760
