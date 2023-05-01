@@ -14,8 +14,8 @@ class Data:
 def string_split(string: str, key: str) -> list[str]:
     # KAMUS LOKAL
         # count, i, index_str, index_hasil : int
-        # part : str
-        # hasil : array of string
+        # part : string
+        # hasil : array [0..count-1] of string
     # ALGORITMA
     # Mencari jumlah bagian hasil pemisahan string
     count = 1
@@ -63,8 +63,8 @@ def string_slice(string: str, index_awal: int, index_akhir: int, index_sekarang:
 # Membersihkan string dari karakter kosong / spasi (" ") pada awal dan akhir string
 def string_strip(string: str) -> list[str]:
     # KAMUS LOKAL
-        # index_awal, index_akhir, i : int
-        # hasil : str
+        # index_awal, index_akhir, i : integer
+        # hasil : string
     # ALGORITMA
     # cari index dimulai string asli (string yang bukan spasi string kosong " " yang tidak berguna)  
     index_awal = 0
@@ -90,8 +90,8 @@ def string_strip(string: str) -> list[str]:
 # Menambahkan string ke dalam array of string
 def string_append(array: list[str], string: str, length: int) -> list[str]:
     # KAMUS LOKAL
-        # i: int
-        # array_baru : array of string
+        # i : integer
+        # array_baru : array [0..length] of string
     # ALGORITMA
     array_baru = ["" for _ in range(length+1)]
     for i in range(length):
@@ -103,7 +103,7 @@ def string_append(array: list[str], string: str, length: int) -> list[str]:
 # mengecek apakah string terdapat pada array jika iya maka mengembalikan indexnya jika tidak mditemukan mengembalikan nilai -1
 def string_in_array(array : list[str], string: str, array_length: int) -> int:
     # KAMUS LOKAL
-        # i : int
+        # i : integer
     # ALGORTIMA
     for i in range(array_length):
         if(array[i] == string):
@@ -114,8 +114,8 @@ def string_in_array(array : list[str], string: str, array_length: int) -> int:
 # Menentukan string terkecil berdasarkan leksikografis
 def string_leksikografis_min(array: list[str], length: int) -> str:
     # KAMUS LOKAL
-        # i : int
-        # min : str
+        # i : integer
+        # min : string
     # ALGORITMA
     min = array[0]
     for i in range(length):
@@ -141,7 +141,7 @@ def string_leksikografis_maks(array: list[str], length: int) -> str:
 # ASUMSI range maksimum adalah 999999
 def int_min(array: list[int], length: int, index_sekarang: int = 0, min: int = 999999) -> int:
     # KAMUS LOKAL
-        # min, length: int
+        # min, length: integer
     # ALGORITMA
     if(array[index_sekarang] < min):
         min = array[index_sekarang]
@@ -154,7 +154,7 @@ def int_min(array: list[int], length: int, index_sekarang: int = 0, min: int = 9
 # Mengembalikan nilai terbesar pada array integer
 def int_maks(array: list[int], length: int) -> int:
     # KAMUS LOKAL
-        # maks, i : int
+        # maks, i : integer
     # ALGORITMA
     maks = array[0]
     for i in range(length):
@@ -166,8 +166,8 @@ def int_maks(array: list[int], length: int) -> int:
 # Menjumlahkan tiap index pada dua array integer yang sama ukuran
 def int_join(array1: list[int],array2: list[int], length: int,) -> list[int]:
     # KAMUS LOKAL
-        # i : int
-        # array_hasil : array of integer
+        # i : integer
+        # array_hasil : array [0..length-1] of integer
     # ALGORITMA
     array_hasil = [0 for _ in range(length)]
     for i in range(length):
@@ -178,8 +178,9 @@ def int_join(array1: list[int],array2: list[int], length: int,) -> list[int]:
 # Menambahkan suatu elemen ke dalam array, Asumsi tipe array dan elemen pasti sama
 def data_append(data: Data, elemen: list[str]) -> Data:
     # KAMUS LOKAL
-        # n_baris, i : int
-        # isi_data, hasil : matrix of string
+        # n_baris, i : integer
+        # hasil : array [0..n_baris) of string
+        # isi_data : array [0..data.n_baris-1] of array [0..data.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_data = data.isi
@@ -197,8 +198,9 @@ def data_append(data: Data, elemen: list[str]) -> Data:
 # Menghapuskan data pada index yang diberikan
 def data_remove(data: Data, index: int) -> Data:
     # KAMUS LOKAL
-        # n_baris, n_kolom, i : int
-        # isi_data, data_baru : matrix of string
+        # n_baris, n_kolom, i : integer
+        # data_baru : array [0..n_baris-2] of array [0..n_kolom-1] of string
+        # isi_data : array [0..n_baris-1] of array [0..n_kolom-1] of string
     # ALGORTIMA
     # unpack data
     isi_data = data.isi
@@ -218,8 +220,8 @@ def data_remove(data: Data, index: int) -> Data:
 # Mencari username pada data users, jika tidak ditemukan maka mengembalikan -1, jika ditemukan maka mengembalikan index
 def cari_index_username(users: Data, username: str) -> int:
     # KAMUS LOKAL
-        # n_baris_users, i : int
-        # isi_data : matrix of string
+        # n_baris_users, i : integer
+        # isi_data : array [0..users.n_baris-1] of array [0..users.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_users = users.isi
@@ -233,9 +235,9 @@ def cari_index_username(users: Data, username: str) -> int:
 # Mencari semua indeks candi yang dibuat oleh jin_pembuat
 def cari_index_candi(candi: Data, jin_pembuat: str) -> list[list[int],int]:
     # KAMUS LOKAL
-        # n_baris_candi, i, count_candi : int
-        # indexs : array of integer
-        # isi_candi : matrix of string
+        # n_baris_candi, i, count_candi : integer
+        # indexs : array [0..count_candi-1] of integer
+        # isi_candi : array [0..candi.n_baris-1] of array [0..candi.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_candi = candi.isi
@@ -258,8 +260,8 @@ def cari_index_candi(candi: Data, jin_pembuat: str) -> list[list[int],int]:
 # Menggabungkan array of string ke dalam matrix of string
 def matrix_str_join(array: list[str], matriks: list[list[str]], n_baris: int, n_kolom: int) -> list[list[str]]:
     # KAMUS LOKAL
-        # i : int
-        # hasil : matrix of string
+        # i : integer
+        # hasil : array [0..n_baris] of array [0..n_kolom-1] of string
     # ALGORITMA
     hasil = [["" for _ in range(n_kolom)] for _ in range(n_baris+1)]
     for i in range(n_baris):
@@ -271,8 +273,9 @@ def matrix_str_join(array: list[str], matriks: list[list[str]], n_baris: int, n_
 # Menambahkan data pembangun suatu candi ke dalam data Candi secara terurut dan mengisi index yang kosong
 def candi_append(candi: Data, array: list[str]) -> None:
     # KAMUS LOKAL
-        # n_baris_candi, n_kolom_candi, i, index: int
-        # isi_candi, isi_candi_baru : matrix of stirng
+        # n_baris_candi, n_kolom_candi, i, index: integer
+        # isi_candi : array [0..candi.n_baris-1] of array [0..candi.n_kolom-1] of string
+        # isi_candi_baru : array [0..candi.n_baris] of array [0..candi.n_kolom-1] of string
     # ALGORITMA
     # unpack data
     isi_candi = candi.isi
