@@ -1,11 +1,11 @@
 # Modul Commands
-# Berisi semua fungsi/procedur untuk command-command yang dapat digunakan
+# Berisi semua fungsi/prosedur untuk command-command yang dapat digunakan
 
 # KAMUS
-    #type Data : < isi : array [0..n_baris-1] of array [0..n_kolom-1] of string,
+    # type Data : < isi : array [0..n_baris-1] of array [0..n_kolom-1] of string,
     #               n_baris : integer,
     #               n_kolom : integer  >
-    # const undo_maks : int = 100
+    # const undo_maks : integer = 100
     # undo_jin : array [0..(2*undo_maks)-1] of array [0..3] of string
     # undo_candi : array [0..(10*undo_maks)-1] of array [0..3] of string
     # current_login : array [0..2] of string
@@ -24,9 +24,10 @@ undo_maks = 100
 undo_jin = [["", "", "", ""] for _ in range(2 * undo_maks)]
 undo_candi = [["", "", "", ""] for _ in range(10 * undo_maks)]
 
-# Prosedur run(command):
+# procedure run (input command: string, input/output users: Data, input/output candi: Data, nput/output bahan_bangunan : Data)
 # Membaca masukkan dari user dan menjalankan command tersebut berdasarkan akun login saat ini
 def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
+    print(bahan_bangunan.isi)
     # KAMUS LOKAL
         # length : integer
         # command_list : array [0..length-1] of string
@@ -42,7 +43,7 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
     elif(command == "exit"):
         exit(users, candi, bahan_bangunan)
     elif(command == "save"):
-            save(users, candi, bahan_bangunan)
+        save(users, candi, bahan_bangunan)
     elif(current_login == ["" for _ in range(3)]):
         command_list = ["logout","summonjin","hapusjin","ubahjin","bangun","kumpul","batchkumpul","batchbangun","laporanjin","laporancandi","hancurkancandi","ayamberkokok","undohapus"]
         length = 13
@@ -81,7 +82,7 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
             if(current_login[2] == "jin_pengumpul"):
                 kumpul(bahan_bangunan,1,False)
             else:
-                print("kumpul hanya dapat diakses oleh akun Jin Pembangun")
+                print("kumpul hanya dapat diakses oleh akun Jin Pengumpul")
         elif(command == "batchkumpul"):
             if(current_login[2] == "bandung_bondowoso"):
                 batchkumpul(users,bahan_bangunan)
@@ -116,13 +117,13 @@ def run(command: str, users: Data, candi: Data ,bahan_bangunan: Data) -> None:
             print(f"command \"{command}\" tidak dikenal.")
 
 # F01 - Login 
-# Fungsi login(current_login)
+# function login(current_login: array [0..2] of string, users: Data ) -> array [0..2] of string
 # Melakukan aksi login dan mengembalikan data hasil login yaitu array string [username,password,role]
 def login(current_login: list[str], users: Data) -> list[str]: 
     # KAMUS LOKAL
         # index : integer
         # username, password : string
-        # isi_users : array[0..users.n_baris-1] of array[0..users.n_kolom-1] of string
+        # isi_users : array [0..users.n_baris-1] of array [0..users.n_kolom-1] of string
     # ALGORITMA
     # Cek apakah sudah login atau belum
     if(current_login != ["", "", ""]):
@@ -151,7 +152,7 @@ def login(current_login: list[str], users: Data) -> list[str]:
             return ["", "", ""]
 
 # F02 - Logout 
-# Fungsi logout(current_login)
+# function logout(current_login: array [0..2] of string) -> array [0..2] of string
 # Melakukan logout akun dengan cara mengosongkan data current_login
 def logout(current_login: list[str]) -> list[str]:
     # KAMUS LOKAL
@@ -166,7 +167,7 @@ def logout(current_login: list[str]) -> list[str]:
         return ["", "", ""]
 
 # F03 - Summon Jin
-# Prosedur summonjin(users)
+# procedure summonjin(input/output users: Data)
 # Mensummon / membuat jin baru
 def summonjin(users: Data) -> None:
     # KAMUS LOKAL
@@ -229,7 +230,10 @@ def summonjin(users: Data) -> None:
         print(f"\nJin {username} berhasil dipanggil!")
 
 # F04 - Hilangkan Jin
-# Prosedur hapusjin(users,candi)
+# procedure hapusjin (input/output users: Data, 
+#                     input/output candi: Data, 
+#                     input/output undo_jin: array[0..2*undo_maks] of array[0..3] of string,
+#                     input/output undo_candi: array[0..10*undo_maks] of array[0..3] of string )
 # Menghapus jin serta candi yang dibuatnya
 def hapusjin(users: Data, candi: Data, undo_jin: list[list[str]], undo_candi: list[list[str]]) -> None:
     # ASUMSI :
@@ -275,8 +279,11 @@ def hapusjin(users: Data, candi: Data, undo_jin: list[list[str]], undo_candi: li
             hapusjin(users,candi)            
 
 # B04 - Undo hapus jin
-# Prosedur undohapus(users,candi, undo_jin)
-# Mengembalikan keadaan jin serta candi yang telah dihapus
+# procedure undohapus(input/output users: Data,
+#                    input/output candi: Data,
+#                    input/output undo_jin: array [0..(2*undo_maks)-1] of array [0..3] of string,
+#                    input/output undo_candi: array [0..(10*undo_maks)-1] of array [0..3] of string )
+# Mengembalikan keadaan jin serta candi hasil bangunnya yang telah dihapus
 def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: list[list[str]])-> None:
     # ASUMSI :
         # dalam satu permainan tidak mungkin menghapus lebih dari 2*undo_maks jin
@@ -307,7 +314,7 @@ def undohapus(users : Data, candi: Data, undo_jin: list[list[str]], undo_candi: 
         print(f"Jin \"{username}\" sudah kembali dengan {count_undo_candi} candi")
 
 # F05 - Ubah Tipe Jin
-# Prosedur ubahjin(users)
+# procedure ubahjin ( input/output users: Data )
 # Mengubah role dari jin, jika role pembangun maka dapat diubah ke pengumpul dan sebaliknya
 def ubahjin(users: Data) -> None:
     # KAMUS LOKAL
@@ -342,7 +349,9 @@ def ubahjin(users: Data) -> None:
     users.isi = isi_users
 
 # F06 - Jin Pembangun .... REKURSIF!!
-# Fungsi bangun(candi ,bahan_bangunan, jin_pembangun, length, jumlah_loop, bangun_batch)
+# function bangun (candi : Data, bahan_bangunan : Data, jin_pembangun : array [0..length-1] of string, 
+#                  length : integer, jumlah_loop : integer, bangun_batch : boolean ) 
+#                  -> array [0..length-1] of array [0..3] of string 
 # Membangun candi, jika jumlah jin_pembangun > 1 maka pembangunan dilakukan secara rekursif
 def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: int, jumlah_loop :int, bangun_batch: bool) -> list[list[str]]:
     # KAMUS LOKAL
@@ -385,8 +394,8 @@ def bangun(candi: Data, bahan_bangunan: Data, jin_pembangun: list[str], length: 
         return [data_hasil]
 
 # F07 - Jin Pengumpul ....  REKURSIF!!
-# Fungsi kumpul(bahan_bangunan, jumlah_loop, kumpul_batch)    
-# Mengumpulkan bahan bangunan yang jumlahnya secara acak
+# function kumpul (bahan_bangunan : Data, jumlah_loop : integer, kumpul_batch : boolean )-> array [0..2] of string
+# Mengumpulkan bahan bangunan yang jumlahnya secara acak, untuk batch kumpul dilakukan dengan rekursif
 def kumpul(bahan_bangunan: Data, jumlah_loop: int, kumpul_batch: bool) -> list[int]:
     # KAMUS LOKAL
         # bahan_dikumpul : array[0..2] of integer
@@ -409,8 +418,8 @@ def kumpul(bahan_bangunan: Data, jumlah_loop: int, kumpul_batch: bool) -> list[i
     else: # jika jumlah_loop = 1 maka rekursif berhenti
         return bahan_dikumpul
 
-# F08 - Batch Kumpul/Bangun
-# Prosedur batchkumpul(users, bahan_bangunan)
+# F08 - Batch Kumpul
+# procedure batchkumpul(input users: Data, input/output bahan_bangunan: Data )
 # Melakukan pengumpulan bahan bangunan oleh semua jin pengumpul yang ada 
 def batchkumpul(users: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
@@ -433,8 +442,9 @@ def batchkumpul(users: Data, bahan_bangunan: Data) -> None:
         # mengumpulkan bahan
         hasil_kumpul = kumpul(bahan_bangunan,count_jin_pengumpul,True)
         print(f"Jin menemukan total {hasil_kumpul[0]} pasir, {hasil_kumpul[1]} batu, dan {hasil_kumpul[2]} air.")
-    
-# Prosedur batchbangun(users, candi, bahan_bangunan)
+
+# F08 - Batch Bangun    
+# procedure batchbangun(input users: Data, input/output candi: Data, input/output bahan_bangunan: Data )
 # Melakukan pembangunan candi oleh setiap jin pembangun yang ada
 def batchbangun(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
@@ -512,7 +522,7 @@ def batchbangun(users: Data, candi: Data, bahan_bangunan: Data) -> None:
             print(f"Jin berhasil membangun total {count_jin_pembangun} candi.")
 
 # F09 - Laporan Jin
-# Prosedur laporanjin(users,candi,bahan_bangunan)
+# procedure laporanjin (input users: Data, input candi: Data, input bahan_bangunan: Data)
 # Melakukan laporan jin mulai dari total jin masing-masing jenis, jin termalas dan terajin serta bahan bangunan
 def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
@@ -603,7 +613,7 @@ def laporanjin(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     print(f"> Jumlah Air : {isi_bahan_bangunan[2][2]} unit")
 
 # F10 - Ambil Laporan Candi
-# Prosedur laporancandi(candi)
+# procedure laporancandi( input candi: Data)
 # Melakukan laporan candi mulai dari jumlah candi, bahan total yang diperlukan, serta candi termurah dan termahal
 def laporancandi(candi: Data) -> None:
     # Kamus LOKAL
@@ -649,7 +659,7 @@ def laporancandi(candi: Data) -> None:
             break
 
 # F11 - Hancurkan Candi
-# Prosedur hancurkancandi(candi)
+# procedure hancurkancandi( input/output candi: Data)
 # Menghancurkan candi dengan id yang diberikan
 def hancurkancandi(candi: Data) -> None:
     # KAMUS LOKAL
@@ -680,7 +690,7 @@ def hancurkancandi(candi: Data) -> None:
         print("Tidak ada candi dengan ID tersebut.")
 
 # F12 - Ayam Berkokok
-# Prosedur ayamberkokok(candi)
+# procedure ayamberkokok (input candi: Data)
 # Menentukan pemenang dari game ini 
 def ayamberkokok (candi: Data) -> None:
     # KAMUS LOKAL
@@ -699,7 +709,7 @@ def ayamberkokok (candi: Data) -> None:
     quit()
 
 # F13 - Load (Gunakan argparse)
-# Fungsi load()
+# function load() -> array [0..2] of Data
 # Menggunakan argparse agar dapat meload / membuka kembali data yang sudah disave sebelumnya, 
 # prosedur ini sendiri dijalankan hanya sekali saja pada command line / terminal
 def load() -> list[Data]:
@@ -731,7 +741,7 @@ def load() -> list[Data]:
         return []
 
 # F14 - Save
-# Prosedur save(users, candi, bahan_bangunan)
+# procedure save (input users: Data, input candi: Data, input bahan_bangunan: Data)
 # Menyimpan data pada folder dengan parent folder "save"
 def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
@@ -764,7 +774,7 @@ def save(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     print(f"Berhasil menyimpan data di folder {path}!")
 
 # F15 - Help
-# Prosedur help(current_login)
+# procedure help( input current_login: array [0..2] of string)
 # Memberikan list semua command yang dapat digunakan tergantung pada status login
 def help(current_login: list[str]) -> None:
     # KAMUS LOKAL
@@ -832,7 +842,7 @@ def help(current_login: list[str]) -> None:
         print("   Untuk keluar dari program dan kembali ke terminal")
 
 # F16 - Exit
-# Prosedur exit(users,candi,bahan_bangunan)
+# procedure exit (input users: Data, input candi: Data, input bahan_bangunan: Data )
 # Untuk keluar dari program, serta opsi menyimpan data sebelum keluar
 def exit(users: Data, candi: Data, bahan_bangunan: Data) -> None:
     # KAMUS LOKAL
