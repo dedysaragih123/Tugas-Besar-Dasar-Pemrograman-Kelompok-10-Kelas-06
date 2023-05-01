@@ -5,13 +5,14 @@
 # type Data : < isi: matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
+# ALGORITMA
 class Data:
     def __init__(self, isi, n_baris, n_kolom):
         self.isi = isi
         self.n_baris = n_baris
         self.n_kolom = n_kolom
 
-# ALGORITMA
+# import fungsi bantuan
 from tools import string_split, string_slice
 
 # Fungsi load(path)

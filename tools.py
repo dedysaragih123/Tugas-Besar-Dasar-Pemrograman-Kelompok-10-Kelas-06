@@ -1,17 +1,20 @@
-# FILE INI BERISI FUNGSI BUATAN PELENGKAP
+# Modul tools
+# Berisi semua fungsi buatan sebagai pelengkap
 
+# KAMUS
 # type Data : < isi: matriks of string,
 #               n_baris : int,
 #               n_kolom : int >
+# ALGORITMA
 class Data:
     def __init__(self, isi, n_baris, n_kolom):
         self.isi = isi
         self.n_baris = n_baris
         self.n_kolom = n_kolom
 
-# Fungsi string_split(string, key)
-# Memisahkan suatu string "str" dengan pemisah "key" dan mengembalikan array yang berisi hasil pemisahan
-def string_split(string: str, key: str) -> list[str]:
+# function string_split (stringx : string, key : string) -> array [0..count-1] of string
+# Memisahkan suatu string "stringx" dengan pemisah "key" dan mengembalikan array yang berisi hasil pemisahan
+def string_split(stringx: str, key: str) -> list[str]:
     # KAMUS LOKAL
         # count, i, index_str, index_hasil : int
         # part : string
@@ -19,76 +22,77 @@ def string_split(string: str, key: str) -> list[str]:
     # ALGORITMA
     # Mencari jumlah bagian hasil pemisahan string
     count = 1
-    for i in range(len(string)):
-        if(string[i] == key):
+    for i in range(len(stringx)):
+        if(stringx[i] == key):
             count += 1
     if(count == 1):
-        return [string]
+        return [stringx]
     hasil = ["" for _ in range(count)]
     # Membagi string menjadi bagian kecil "part" dan digabungkan pada hasil
     index_str = 0
     index_hasil = 0
     while True:
-        if(index_str == len(string)):
+        if(index_str == len(stringx)):
             break # semua karakter string sudah dicek
         part = ""
-        for i in range(index_str,len(string)):
-            if(string[i] == key): # karakter pemisah tidak dimasukkan ke hasil
+        for i in range(index_str,len(stringx)):
+            if(stringx[i] == key): # karakter pemisah tidak dimasukkan ke hasil
                 index_str += 1
                 break
             else: # string[i] != key
                 index_str += 1
-                part += string[i]
+                part += stringx[i]
         # Menyimpan bagian string pada array hasil
         hasil[index_hasil] = part 
         index_hasil += 1
     return hasil
 
-# Fungsi string_slice(string, index_awal, index_akhir):    ... REKURSIF!!
-# Mengembalikan bagian string dari index_awal hingga index_akhir 
-def string_slice(string: str, index_awal: int, index_akhir: int, index_sekarang: int = 0) -> str:
+# FUNGSI REKURSIF
+# function string_slice (stringx : string, index_awal:integer, index_akhir: integer, index_sekarang:integer = 0)-> string
+# Mengembalikan bagian stringx dari index_awal hingga index_akhir 
+def string_slice(stringx: str, index_awal: int, index_akhir: int, index_sekarang: int = 0) -> str:
     # KAMUS LOKAL
         # index_sekarang : int
     # ALGORITMA
     if(index_sekarang < index_awal):
-        return string_slice(string, index_awal, index_akhir, index_sekarang+1)
-    elif(index_sekarang == len(string)):
+        return string_slice(stringx, index_awal, index_akhir, index_sekarang+1)
+    elif(index_sekarang == len(stringx)):
         return ""
     elif(index_sekarang == index_akhir-1):
-        return string[index_sekarang]
+        return stringx[index_sekarang]
     else:
-        return string[index_sekarang] + string_slice(string, index_awal, index_akhir, index_sekarang+1)
+        return stringx[index_sekarang] + string_slice(stringx, index_awal, index_akhir, index_sekarang+1)
 
-# Fungsi string_strip(string)
+# function string_strip(stringx : string)-> array [index_awal..index_akhir-1] of string
 # Membersihkan string dari karakter kosong / spasi (" ") pada awal dan akhir string
-def string_strip(string: str) -> list[str]:
+def string_strip(stringx: str) -> list[str]:
     # KAMUS LOKAL
         # index_awal, index_akhir, i : integer
         # hasil : string
     # ALGORITMA
     # cari index dimulai string asli (string yang bukan spasi string kosong " " yang tidak berguna)  
     index_awal = 0
-    for i in range(len(string)):
-        if(string[i] != " "):
+    for i in range(len(stringx)):
+        if(stringx[i] != " "):
             break
         else:
             index_awal += 1
     # cari index berakhirnya string asli (string yang bukan spasi string kosong " " yang tidak berguna)
-    index_akhir = len(string)
-    for i in range(len(string)-1,index_awal,-1):
-        if(string[i] != " "):
+    index_akhir = len(stringx)
+    for i in range(len(stringx)-1,index_awal,-1):
+        if(stringx[i] != " "):
             break
         else:
             index_akhir -= 1
     # mengembalikan string yang sudah bersih
     hasil = ""
     for i in range(index_awal,index_akhir):
-        hasil += string[i]
+        hasil += stringx[i]
     return hasil
 
-# Fungsi string_append(array,string,length)
+# function string_append(array : array [0..length-1] of string, stringx : string, length : integer) -> array [0..length] of string
 # Menambahkan string ke dalam array of string
-def string_append(array: list[str], string: str, length: int) -> list[str]:
+def string_append(array: list[str], stringx: str, length: int) -> list[str]:
     # KAMUS LOKAL
         # i : integer
         # array_baru : array [0..length] of string
@@ -96,21 +100,21 @@ def string_append(array: list[str], string: str, length: int) -> list[str]:
     array_baru = ["" for _ in range(length+1)]
     for i in range(length):
         array_baru[i] = array[i]
-    array_baru[length] = string
+    array_baru[length] = stringx
     return array_baru
 
-# Fungsi string_in_array(array, string, array_length)
+# function string_in_array(array : array [0..array_length-1] of string, stringx : string, array_length : integer) -> integer
 # mengecek apakah string terdapat pada array jika iya maka mengembalikan indexnya jika tidak mditemukan mengembalikan nilai -1
-def string_in_array(array : list[str], string: str, array_length: int) -> int:
+def string_in_array(array : list[str], stringx: str, array_length: int) -> int:
     # KAMUS LOKAL
         # i : integer
     # ALGORTIMA
     for i in range(array_length):
-        if(array[i] == string):
+        if(array[i] == stringx):
             return i
     return -1
 
-# Fungsi string_leksikografis_min(array,length)
+# function string_leksikografis_min(array : array [0..length-1] of string, length : integer) -> string
 # Menentukan string terkecil berdasarkan leksikografis
 def string_leksikografis_min(array: list[str], length: int) -> str:
     # KAMUS LOKAL
@@ -123,7 +127,7 @@ def string_leksikografis_min(array: list[str], length: int) -> str:
             min = array[i]
     return min
 
-# Fungsi string_leksikografis_maks(array,length)
+# function string_leksikografis_maks(array : array [0..length-1] of string, length : integer) -> string
 # Menentukan string tertinggi berdasarkan leksikografis
 def string_leksikografis_maks(array: list[str], length: int) -> str:
     # KAMUS LOKAL
@@ -135,10 +139,10 @@ def string_leksikografis_maks(array: list[str], length: int) -> str:
         if(array[i] > maks):
             maks = array[i]
     return maks
-    
-# Fungsi int_min(array,length)     ... REKURSIF !!
-# Mengembalikan nilai terkecil pada array integer
-# ASUMSI range maksimum adalah 999999
+
+# FUNGSI REKURSIF    
+# function int_min(array : array [0..length-1] of string, length : integer, index_sekarang : integer = 0,  min : integer = 999999 ) -> integer
+# Program ini untuk mengembalikan nilai terkecil pada array integer, asumsi nilai maksimum tertinggi adalah 999999 
 def int_min(array: list[int], length: int, index_sekarang: int = 0, min: int = 999999) -> int:
     # KAMUS LOKAL
         # min, length: integer
@@ -150,7 +154,7 @@ def int_min(array: list[int], length: int, index_sekarang: int = 0, min: int = 9
     else:
         return int_min(array, length, index_sekarang+1, min)
 
-# Fungsi int_maks(array,length)
+# function int_maks(array : array [0..length-1] of string, length : integer) -> integer
 # Mengembalikan nilai terbesar pada array integer
 def int_maks(array: list[int], length: int) -> int:
     # KAMUS LOKAL
@@ -162,7 +166,7 @@ def int_maks(array: list[int], length: int) -> int:
             maks = array[i]
     return maks
 
-# Fungsi int_join(array1, array2, length)
+# function int_join(array1 : array [0..length-1] of integer, array2 : array [0..length-1] of integer, length : integer) -> integer
 # Menjumlahkan tiap index pada dua array integer yang sama ukuran
 def int_join(array1: list[int],array2: list[int], length: int,) -> list[int]:
     # KAMUS LOKAL
@@ -174,7 +178,7 @@ def int_join(array1: list[int],array2: list[int], length: int,) -> list[int]:
         array_hasil[i] = array1[i] + array2[i]
     return array_hasil
 
-# Fungsi data_append(data,elemen):
+# function Data_append(data : Data, elemen: array[0..data.n_kolom-1] of string)
 # Menambahkan suatu elemen ke dalam array, Asumsi tipe array dan elemen pasti sama
 def data_append(data: Data, elemen: list[str]) -> Data:
     # KAMUS LOKAL
@@ -304,7 +308,7 @@ def candi_append(candi: Data, array: list[str]) -> None:
 from numgen import randomize # import fungsi untuk angka random
 def generate_bahan_bangunan() -> list[int]:
     # KAMUS LOKAL
-        # pasir, batu, air : int
+        # pasir, batu, air : integer
     # ALGORITMA
     pasir = randomize(1,5)
     batu = randomize(1,5)
