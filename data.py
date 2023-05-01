@@ -21,7 +21,7 @@ def data_load(path: str) -> Data:
         # n_baris, n_kolom, i : integer
         # line : string
         # cek_kolom, first_row : boolean
-        # file : open(path, "r")
+        # file : array [0..len(file)-1] of string
         # data : Data
     # ALGORITMA
     # Mencari jumlah efektif data
@@ -62,7 +62,7 @@ def data_save(path: str, nama_file: str, data: Data) -> None:
     # KAMUS LOKAL
         # n_baris, n_kolom, i, j : integer
         # line : string
-        # file : open(path, "w+")
+        # file : array [0..len(file)-1] of string
         # isi_data : matriks of string
     # ALGORITMA
     file = open(path+"/"+nama_file+".csv","w+")
